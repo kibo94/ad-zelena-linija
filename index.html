@@ -122,7 +122,7 @@
         font-weight: 400;
         letter-spacing: 0.14em;
         text-transform: uppercase;
-        color: var(--clr-muted);
+        color: var(--clr-forest);
         text-decoration: none;
         position: relative;
         padding-block-end: 2px;
@@ -143,7 +143,7 @@
 
       .nav__links a:hover,
       .nav__links a.is-active {
-        color: var(--clr-cream);
+        color: var(--clr-forest);
       }
 
       .nav__links a:hover::after,
@@ -161,8 +161,8 @@
         align-items: center;
         gap: 9px;
         padding: 13px 28px;
-        background: var(--clr-gold);
-        color: var(--clr-forest);
+        background: var(--clr-mid);
+        color: var(--clr-white);
         font-family: "Jost", sans-serif;
         font-size: 11px;
         font-weight: 600;
@@ -659,14 +659,15 @@
         gap: 10px;
         margin-bottom: 30px;
         padding: 7px 15px 7px 11px;
-        border: 1px solid rgba(200, 164, 106, 0.28);
+  
       }
 
       .hero__eyebrow-dot {
         width: 7px;
         height: 7px;
         border-radius: 50%;
-        background: var(--clr-gold);
+        background: var(--clr-accent);
+
         flex-shrink: 0;
         animation: dot-pulse 2.4s ease-in-out infinite;
       }
@@ -686,7 +687,7 @@
         font-weight: 500;
         letter-spacing: 0.22em;
         text-transform: uppercase;
-        color: var(--clr-gold);
+        color: var(--clr-accent);
       }
 
       /* Headline */
@@ -702,7 +703,7 @@
 
       .hero__headline .hl-em {
         font-style: italic;
-        color: var(--clr-gold);
+        color: var(--clr-accent);
       }
 
       .hero__headline .hl-bold {
@@ -753,8 +754,8 @@
 
       .btn--primary {
         padding: 17px 42px;
-        background: var(--clr-gold);
-        color: var(--clr-forest);
+        background: var(--clr-mid);
+        color: var(--clr-white);
         position: relative;
         overflow: hidden;
       }
@@ -1096,6 +1097,7 @@
         z-index: 10;
         background: rgba(13, 26, 13, 0.97);
         border-top: 1px solid rgba(200, 164, 106, 0.12);
+        overflow: hidden;
       }
 
       .features__inner {
@@ -1110,7 +1112,7 @@
         display: flex;
         align-items: center;
         gap: 20px;
-        padding: 32px 36px;
+        padding: 32px 36px 96px;
         border-right: 1px solid rgba(200, 164, 106, 0.1);
         transition: background 0.3s;
         cursor: default;
@@ -2852,7 +2854,7 @@
       .footer__nav-list a {
         font-family: "Jost", sans-serif;
         font-size: 0.9rem;
-        color: rgba(243, 237, 227, 0.5);
+        color: rgba(243, 237, 227, 0.8);
         text-decoration: none;
         letter-spacing: 0.04em;
         display: flex;
@@ -3314,6 +3316,96 @@
           grid-row: 6;
         }
       }
+
+      /* ===== HERO — WHITE / LIGHT BACKGROUND ===== */
+      .hero__bg {
+        background:
+          radial-gradient(
+            ellipse 70% 55% at 50% -5%,
+            rgba(92, 158, 53, 0.11) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 40% 40% at 85% 90%,
+            rgba(92, 158, 53, 0.07) 0%,
+            transparent 55%
+          ),
+          #f7f9f5 !important;
+      }
+      .hero__grain {
+        opacity: 0.012;
+      }
+      .hero__headline {
+        color: var(--clr-forest) !important;
+      }
+      .hero__headline .hl-bold {
+        color: var(--clr-forest) !important;
+      }
+      .hero__desc {
+        color: rgba(9, 15, 9, 0.55) !important;
+      }
+      .stat__num {
+        color: var(--clr-forest) !important;
+      }
+      .stat__lbl {
+        color: rgba(9, 15, 9, 0.45) !important;
+      }
+      .stat__divider {
+        background: rgba(9, 15, 9, 0.12) !important;
+      }
+      .hero__scroll-txt {
+        color: rgba(9, 15, 9, 0.35) !important;
+      }
+      .hero__scroll-bar {
+        background: rgba(9, 15, 9, 0.18) !important;
+      }
+      .hero__scroll-bar::after {
+        background: var(--clr-forest) !important;
+      }
+      .hero .btn--outline {
+        color: var(--clr-forest) !important;
+        border-color: rgba(9, 15, 9, 0.22) !important;
+      }
+      .hero .btn--outline:hover {
+        background: rgba(9, 15, 9, 0.05) !important;
+      }
+      .hero__card {
+        background: rgba(255, 255, 255, 0.88) !important;
+        backdrop-filter: blur(12px);
+      }
+      .hero__card-icon {
+        background: rgba(92, 158, 53, 0.1) !important;
+      }
+      .hero__card-label {
+        color: rgba(9, 15, 9, 0.5) !important;
+      }
+      .hero__card-value {
+        color: var(--clr-forest) !important;
+      }
+      .hero__eyebrow {
+        color: var(--clr-gold) !important;
+      }
+
+      /* ===== WAVE DIVIDERS ===== */
+      .wave-divider {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        line-height: 0;
+        z-index: 15;
+        pointer-events: none;
+      }
+      .wave-divider svg {
+        display: block;
+        width: 100%;
+        height: 80px;
+      }
+      @media (max-width: 768px) {
+        .wave-divider svg {
+          height: 48px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -3646,7 +3738,10 @@
       <div class="hero__inner">
         <!-- ── LEFT COLUMN ── -->
         <div class="hero__left">
-          <div class="hero__eyebrow" aria-label="Premium usluge uređenja prostora">
+          <div
+            class="hero__eyebrow"
+            aria-label="Premium usluge uređenja prostora"
+          >
             <div class="hero__eyebrow-dot" aria-hidden="true"></div>
             <span class="hero__eyebrow-label"
               >Premium usluge uređenja prostora</span
@@ -3800,6 +3895,18 @@
       <div class="hero__scroll" aria-hidden="true">
         <div class="hero__scroll-bar"></div>
         <span class="hero__scroll-txt">Skroluj</span>
+      </div>
+      <div class="wave-divider" aria-hidden="true">
+        <svg
+          viewBox="0 0 1440 80"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0,80 C360,20 720,0 1080,20 C1260,30 1380,60 1440,80 L1440,80 L0,80 Z"
+            fill="#152615"
+          />
+        </svg>
       </div>
     </section>
 
@@ -4020,11 +4127,11 @@
           </h2>
 
           <p class="about__text" data-reveal data-delay="2">
-            Više od 15 godina, GardenGlow transformiše obične spoljašnje prostore
-            u živa umetnička dela. Naš multidisciplinarni tim hortikultivista,
-            dizajnera i stručnjaka za održavanje sarađuje na isporuci rezultata
-            koji su i trajni i lepi — od privatnih imanja do velikih komercijalnih
-            zelenih površina.
+            Više od 15 godina, GardenGlow transformiše obične spoljašnje
+            prostore u živa umetnička dela. Naš multidisciplinarni tim
+            hortikultivista, dizajnera i stručnjaka za održavanje sarađuje na
+            isporuci rezultata koji su i trajni i lepi — od privatnih imanja do
+            velikih komercijalnih zelenih površina.
           </p>
 
           <!-- Vision + Mission cards -->
@@ -4216,6 +4323,18 @@
         </div>
         <!-- /trust__logos -->
       </div>
+      <div class="wave-divider" aria-hidden="true">
+        <svg
+          viewBox="0 0 1440 80"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0,0 C480,80 960,80 1440,0 L1440,80 L0,80 Z"
+            fill="#f3ede3"
+          />
+        </svg>
+      </div>
     </section>
 
     <!-- ═══════════════════════════════════════
@@ -4355,8 +4474,8 @@
             </div>
             <div class="svc__name">Sistem za navodnjavanje</div>
             <p class="svc__desc">
-              Sistemi za precizno upravljanje vodom koji održavaju zdrav travnjak
-              uz uštedu vode i značajno smanjenje troškova.
+              Sistemi za precizno upravljanje vodom koji održavaju zdrav
+              travnjak uz uštedu vode i značajno smanjenje troškova.
             </p>
             <a href="#" class="svc__more">
               Saznajte više
@@ -4469,6 +4588,18 @@
         <!-- /services__grid -->
       </div>
       <!-- /services__inner -->
+      <div class="wave-divider" aria-hidden="true">
+        <svg
+          viewBox="0 0 1440 80"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0,80 C360,10 720,0 1080,20 C1260,30 1380,55 1440,80 L1440,80 L0,80 Z"
+            fill="#090f09"
+          />
+        </svg>
+      </div>
     </section>
 
     <!-- ═══════════════════════════════════════
@@ -4498,13 +4629,11 @@
             aria-label="Filtriraj projekte po kategoriji"
           >
             <button class="gal-btn is-active" data-filter="all">Svi</button>
-            <button class="gal-btn" data-filter="residential">
-              Stambeni
+            <button class="gal-btn" data-filter="residential">Stambeni</button>
+            <button class="gal-btn" data-filter="commercial">
+              Komercijalni
             </button>
-            <button class="gal-btn" data-filter="commercial">Komercijalni</button>
-            <button class="gal-btn" data-filter="water">
-              Voda i terase
-            </button>
+            <button class="gal-btn" data-filter="water">Voda i terase</button>
           </div>
         </div>
         <!-- /gallery__hd -->
@@ -4683,7 +4812,8 @@
         <!-- Footer row -->
         <div class="gallery__footer" data-reveal data-delay="2">
           <p class="gallery__count">
-            Prikazuje se <strong>6</strong> od <strong>48</strong> završenih projekata
+            Prikazuje se <strong>6</strong> od <strong>48</strong> završenih
+            projekata
           </p>
           <a href="#" class="btn btn--outline" style="padding: 14px 36px">
             Pogledajte sve projekte
@@ -4705,6 +4835,18 @@
         </div>
       </div>
       <!-- /gallery__inner -->
+      <div class="wave-divider" aria-hidden="true">
+        <svg
+          viewBox="0 0 1440 80"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0,0 C360,70 720,80 1080,60 C1260,50 1380,20 1440,0 L1440,80 L0,80 Z"
+            fill="#173317"
+          />
+        </svg>
+      </div>
     </section>
 
     <!-- ═══════════════════════════════════════
@@ -4726,8 +4868,8 @@
 
           <p class="why__intro" data-reveal data-delay="1">
             Kombinujemo hortikulturnu stručnost sa iskrenom strašću prema
-            prirodnom svetu — isporučujući predele koji su jednako trajni
-            koliko i izvanredni.
+            prirodnom svetu — isporučujući predele koji su jednako trajni koliko
+            i izvanredni.
           </p>
 
           <ul class="why__list" data-reveal data-delay="2">
@@ -4779,8 +4921,8 @@
               <div class="why__item-body">
                 <div class="why__item-title">Zadovoljstvo zagarantovano</div>
                 <p class="why__item-desc">
-                  Stojimo iza svakog projekta. Ako nešto nije u redu, vraćamo
-                  se i ispravljamo — bez dodatnih troškova.
+                  Stojimo iza svakog projekta. Ako nešto nije u redu, vraćamo se
+                  i ispravljamo — bez dodatnih troškova.
                 </p>
               </div>
             </li>
@@ -4796,8 +4938,8 @@
               <div class="why__item-body">
                 <div class="why__item-title">Nagrađivani dizajn</div>
                 <p class="why__item-desc">
-                  Prepoznati od strane Nacionalnog udruženja za uređenje prostora
-                  za izvrsnost u dizajnu tri uzastopne godine.
+                  Prepoznati od strane Nacionalnog udruženja za uređenje
+                  prostora za izvrsnost u dizajnu tri uzastopne godine.
                 </p>
               </div>
             </li>
@@ -4847,6 +4989,18 @@
         <!-- /why__right -->
       </div>
       <!-- /why__inner -->
+      <div class="wave-divider" aria-hidden="true">
+        <svg
+          viewBox="0 0 1440 80"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0,80 C480,0 960,0 1440,80 L1440,80 L0,80 Z"
+            fill="#f3ede3"
+          />
+        </svg>
+      </div>
     </section>
 
     <!-- ═══════════════════════════════════════
@@ -4909,16 +5063,12 @@
             </div>
           </div>
 
-          <div
-            class="testi__slide"
-            role="region"
-            aria-label="Preporuka 2 od 3"
-          >
+          <div class="testi__slide" role="region" aria-label="Preporuka 2 od 3">
             <p class="testi__quote">
-              „Kao developer komercijalnih nekretnina, kvalitet uređenja direktno
-              utiče na dobrobit naših stanara i prestiž naše zgrade. Tim
-              GardenGlow-a je ispunio sve — na vreme, u okviru budžeta, i daleko
-              iznad naših očekivanja. Nećemo koristiti nikog drugog."
+              „Kao developer komercijalnih nekretnina, kvalitet uređenja
+              direktno utiče na dobrobit naših stanara i prestiž naše zgrade.
+              Tim GardenGlow-a je ispunio sve — na vreme, u okviru budžeta, i
+              daleko iznad naših očekivanja. Nećemo koristiti nikog drugog."
             </p>
             <div class="testi__client">
               <div class="testi__avatar" aria-hidden="true">M</div>
@@ -4927,16 +5077,13 @@
             </div>
           </div>
 
-          <div
-            class="testi__slide"
-            role="region"
-            aria-label="Preporuka 3 od 3"
-          >
+          <div class="testi__slide" role="region" aria-label="Preporuka 3 od 3">
             <p class="testi__quote">
               „Tim je redizajnirao ceo spoljašnji zeleni prostor našeg hotela —
               bazeni, staze, baštenski terasi. Rezultat je zapanjujući. Naši
               gosti sada redovno pominju prostore u recenzijama. GardenGlow nije
-              samo poboljšao naše imanje — podigao je celokupno iskustvo gostiju."
+              samo poboljšao naše imanje — podigao je celokupno iskustvo
+              gostiju."
             </p>
             <div class="testi__client">
               <div class="testi__avatar" aria-hidden="true">L</div>
@@ -5011,6 +5158,18 @@
         </div>
       </div>
       <!-- /testi__inner -->
+      <div class="wave-divider" aria-hidden="true">
+        <svg
+          viewBox="0 0 1440 80"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0,0 C480,80 960,80 1440,0 L1440,80 L0,80 Z"
+            fill="#090f09"
+          />
+        </svg>
+      </div>
     </section>
 
     <!-- ═══════════════════════════════════════
@@ -5050,9 +5209,7 @@
             </svg>
             <span class="footer__logo-text">
               <span class="footer__logo-name">GardenGlow</span>
-              <span class="footer__logo-tagline"
-                >Uređenje i zelena nega</span
-              >
+              <span class="footer__logo-tagline">Uređenje i zelena nega</span>
             </span>
           </a>
 
@@ -5335,8 +5492,8 @@
       <div class="footer__copy">
         <div class="footer__copy-inner">
           <p class="footer__copy-text">
-            &copy; 2025 <span>GardenGlow</span>. Sva prava zadržana. Izrađeno
-            s ljubavlju u Beogradu.
+            &copy; 2025 <span>GardenGlow</span>. Sva prava zadržana. Izrađeno s
+            ljubavlju u Beogradu.
           </p>
           <ul class="footer__legal-links">
             <li><a href="#">Politika privatnosti</a></li>
