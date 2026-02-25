@@ -1,0 +1,5509 @@
+<!doctype html>
+<html lang="sr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GardenGlow — Uređenje i Održavanje Zelenih Površina</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ─────────────────────────────────────────
+       RESET & TOKENS
+    ───────────────────────────────────────── */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --clr-forest: #090f09;
+        --clr-deep: #0d1a0d;
+        --clr-mid: #173317;
+        --clr-accent: #2c5a2c;
+        --clr-vivid: #5c9e35;
+        --clr-gold: #c8a46a;
+        --clr-gold-lt: #deba84;
+        --clr-cream: #f3ede3;
+        --clr-muted: #7e9e76;
+        --clr-white: #ffffff;
+        --nav-h: 88px;
+        --max-w: 1380px;
+        --pad-x: 64px;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Jost", sans-serif;
+        background: var(--clr-forest);
+        color: var(--clr-cream);
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* ─────────────────────────────────────────
+       NAVIGATION
+    ───────────────────────────────────────── */
+      .nav {
+        position: fixed;
+        inset-block-start: 0;
+        inset-inline: 0;
+        z-index: 1000;
+        height: var(--nav-h);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-inline: var(--pad-x);
+        border-bottom: 1px solid transparent;
+        transition:
+          height 0.45s ease,
+          background 0.5s ease,
+          border-color 0.5s ease;
+      }
+
+      .nav.is-scrolled {
+        height: 66px;
+        background: rgba(9, 15, 9, 0.92);
+        backdrop-filter: blur(22px) saturate(1.5);
+        -webkit-backdrop-filter: blur(22px) saturate(1.5);
+        border-bottom-color: rgba(200, 164, 106, 0.13);
+      }
+
+      /* — Logo — */
+      .nav__logo {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        text-decoration: none;
+        flex-shrink: 0;
+      }
+
+      .nav__logo-mark {
+        width: 36px;
+        height: 36px;
+      }
+
+      .nav__wordmark {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 21px;
+        font-weight: 500;
+        color: var(--clr-cream);
+        letter-spacing: 0.04em;
+        line-height: 1;
+      }
+
+      .nav__wordmark strong {
+        color: var(--clr-gold);
+        font-weight: 600;
+      }
+
+      /* — Links — */
+      .nav__links {
+        display: flex;
+        list-style: none;
+        align-items: center;
+        gap: 36px;
+      }
+
+      .nav__links a {
+        font-size: 11.5px;
+        font-weight: 400;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--clr-muted);
+        text-decoration: none;
+        position: relative;
+        padding-block-end: 2px;
+        transition: color 0.28s;
+      }
+
+      .nav__links a::after {
+        content: "";
+        position: absolute;
+        inset-block-end: -3px;
+        inset-inline-start: 50%;
+        translate: -50% 0;
+        width: 0;
+        height: 1px;
+        background: var(--clr-gold);
+        transition: width 0.35s ease;
+      }
+
+      .nav__links a:hover,
+      .nav__links a.is-active {
+        color: var(--clr-cream);
+      }
+
+      .nav__links a:hover::after,
+      .nav__links a.is-active::after {
+        width: 100%;
+      }
+
+      .nav__links a.is-active::after {
+        background: var(--clr-vivid);
+      }
+
+      /* — CTA button — */
+      .nav__cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 13px 28px;
+        background: var(--clr-gold);
+        color: var(--clr-forest);
+        font-family: "Jost", sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.17em;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition:
+          background 0.28s,
+          transform 0.28s,
+          box-shadow 0.28s;
+      }
+
+      .nav__cta:hover {
+        background: var(--clr-gold-lt);
+        transform: translateY(-1px);
+        box-shadow: 0 10px 30px rgba(200, 164, 106, 0.4);
+      }
+
+      /* — Burger (mobile) — */
+      .nav__burger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        padding: 4px;
+      }
+
+      .nav__burger span {
+        display: block;
+        width: 23px;
+        height: 1.5px;
+        background: var(--clr-cream);
+        transition: all 0.3s;
+      }
+      /* Burger → X morph when open */
+      .nav.is-scrolled .nav__burger.is-open span {
+        background: var(--clr-forest) !important;
+      }
+      .nav__burger.is-open span {
+        background: var(--clr-cream) !important;
+      }
+      .nav__burger.is-open span:nth-child(1) {
+        transform: translateY(6.5px) rotate(45deg);
+      }
+      .nav__burger.is-open span:nth-child(2) {
+        opacity: 0;
+        transform: scaleX(0);
+      }
+      .nav__burger.is-open span:nth-child(3) {
+        transform: translateY(-6.5px) rotate(-45deg);
+      }
+
+      /* ─────────────────────────────────────────
+       MOBILE DRAWER
+    ───────────────────────────────────────── */
+      .nav__drawer {
+        position: fixed;
+        inset: 0;
+        z-index: 998;
+        background: #0a1509;
+        display: flex;
+        flex-direction: column;
+        padding: calc(var(--nav-h) + 36px) 44px 56px;
+        overflow-y: auto;
+        /* Depth atmosphere */
+        background-image:
+          radial-gradient(
+            ellipse 75% 55% at 90% 8%,
+            rgba(44, 90, 44, 0.28) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 50% 60% at 4% 92%,
+            rgba(44, 90, 44, 0.14) 0%,
+            transparent 55%
+          );
+        /* Hidden state — slide from right */
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(100%);
+        transition:
+          transform 0.62s cubic-bezier(0.16, 1, 0.3, 1),
+          opacity 0.3s ease,
+          visibility 0s linear 0.62s;
+      }
+
+      /* Grain overlay */
+      .nav__drawer::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.04;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size: 180px 180px;
+      }
+
+      /* Open state */
+      .nav__drawer.is-open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0);
+        transition:
+          transform 0.62s cubic-bezier(0.16, 1, 0.3, 1),
+          opacity 0.22s ease,
+          visibility 0s linear 0s;
+      }
+
+      /* — List — */
+      .nav__drawer-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 44px;
+      }
+
+      .nav__drawer-item {
+        opacity: 0;
+        transform: translateX(36px);
+        transition:
+          opacity 0.48s ease calc(var(--i, 0) * 55ms + 60ms),
+          transform 0.52s cubic-bezier(0.16, 1, 0.3, 1)
+            calc(var(--i, 0) * 55ms + 60ms);
+      }
+
+      .nav__drawer.is-open .nav__drawer-item {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .nav__drawer-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(34px, 8.5vw, 54px);
+        font-weight: 300;
+        letter-spacing: -0.01em;
+        color: rgba(243, 237, 227, 0.48);
+        text-decoration: none;
+        padding: 13px 0;
+        border-bottom: 1px solid rgba(200, 164, 106, 0.09);
+        line-height: 1.05;
+        transition:
+          color 0.28s,
+          padding-left 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+        position: relative;
+      }
+
+      /* Gold number badge */
+      .nav__drawer-link::before {
+        content: attr(data-num);
+        font-family: "Jost", sans-serif;
+        font-size: 10px;
+        font-weight: 400;
+        letter-spacing: 0.14em;
+        color: rgba(200, 164, 106, 0.38);
+        align-self: flex-start;
+        margin-top: 6px;
+        min-width: 26px;
+      }
+
+      /* Arrow on right */
+      .nav__drawer-link-arr {
+        width: 22px;
+        height: 22px;
+        flex-shrink: 0;
+        color: rgba(200, 164, 106, 0);
+        transition:
+          color 0.28s,
+          transform 0.35s;
+      }
+
+      .nav__drawer-link:hover .nav__drawer-link-arr,
+      .nav__drawer-link.is-active .nav__drawer-link-arr {
+        color: var(--clr-gold);
+        transform: translateX(5px);
+      }
+
+      .nav__drawer-link:hover,
+      .nav__drawer-link.is-active {
+        color: var(--clr-cream);
+        padding-left: 10px;
+      }
+
+      /* Active gold left bar */
+      .nav__drawer-link.is-active::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        translate: 0 -50%;
+        width: 2px;
+        height: 60%;
+        background: var(--clr-gold);
+      }
+
+      /* — Separator — */
+      .nav__drawer-sep {
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          rgba(200, 164, 106, 0.3) 0%,
+          transparent 80%
+        );
+        margin-bottom: 38px;
+        opacity: 0;
+        transform-origin: left;
+        transform: scaleX(0.2);
+        transition:
+          opacity 0.4s ease calc(var(--i, 0) * 55ms + 60ms),
+          transform 0.55s cubic-bezier(0.16, 1, 0.3, 1)
+            calc(var(--i, 0) * 55ms + 60ms);
+      }
+
+      .nav__drawer.is-open .nav__drawer-sep {
+        opacity: 1;
+        transform: scaleX(1);
+      }
+
+      /* — CTA — */
+      .nav__drawer-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        font-family: "Jost", sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--clr-forest);
+        background: var(--clr-gold);
+        padding: 17px 36px;
+        text-decoration: none;
+        width: fit-content;
+        margin-bottom: 36px;
+        opacity: 0;
+        transform: translateY(18px);
+        transition:
+          background 0.28s,
+          box-shadow 0.28s,
+          opacity 0.44s ease calc(var(--i, 0) * 55ms + 60ms),
+          transform 0.48s cubic-bezier(0.16, 1, 0.3, 1)
+            calc(var(--i, 0) * 55ms + 60ms);
+      }
+
+      .nav__drawer.is-open .nav__drawer-cta {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .nav__drawer-cta:hover {
+        background: var(--clr-gold-lt);
+        box-shadow: 0 12px 38px rgba(200, 164, 106, 0.38);
+      }
+
+      .nav__drawer-cta svg {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+      }
+
+      /* — Contact footer — */
+      .nav__drawer-foot {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        opacity: 0;
+        transform: translateY(12px);
+        transition:
+          opacity 0.42s ease calc(var(--i, 0) * 55ms + 60ms),
+          transform 0.44s ease calc(var(--i, 0) * 55ms + 60ms);
+      }
+
+      .nav__drawer.is-open .nav__drawer-foot {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .nav__drawer-foot span {
+        font-family: "Jost", sans-serif;
+        font-size: 11px;
+        font-weight: 400;
+        letter-spacing: 0.1em;
+        color: rgba(243, 237, 227, 0.32);
+      }
+
+      /* — Botanical corner decoration — */
+      .nav__drawer-bota {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 220px;
+        opacity: 0;
+        pointer-events: none;
+        transform: rotate(180deg);
+        transition: opacity 0.6s ease 0.45s;
+      }
+
+      .nav__drawer.is-open .nav__drawer-bota {
+        opacity: 0.14;
+      }
+
+      /* ─────────────────────────────────────────
+       HERO — BACKGROUND LAYERS
+    ───────────────────────────────────────── */
+      .hero {
+        min-height: 100vh;
+        position: relative;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      /* Multi-stop gradient atmosphere */
+      .hero__bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background:
+          radial-gradient(
+            ellipse 78% 75% at 72% 48%,
+            rgba(44, 90, 44, 0.38) 0%,
+            transparent 62%
+          ),
+          radial-gradient(
+            ellipse 50% 85% at 92% 18%,
+            rgba(92, 158, 53, 0.14) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse 55% 55% at 4% 82%,
+            rgba(23, 51, 23, 0.55) 0%,
+            transparent 60%
+          ),
+          linear-gradient(
+            152deg,
+            var(--clr-forest) 0%,
+            #0b1b0b 42%,
+            #080e08 100%
+          );
+      }
+
+      /* Procedural grain overlay */
+      .hero__grain {
+        position: absolute;
+        inset: -50%;
+        width: 200%;
+        height: 200%;
+        z-index: 1;
+        pointer-events: none;
+        opacity: 0.028;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size: 180px 180px;
+        animation: grain 10s steps(8) infinite;
+      }
+
+      @keyframes grain {
+        0% {
+          transform: translate(0%, 0%);
+        }
+        12% {
+          transform: translate(-4%, 9%);
+        }
+        25% {
+          transform: translate(7%, -3%);
+        }
+        37% {
+          transform: translate(-8%, 5%);
+        }
+        50% {
+          transform: translate(3%, -8%);
+        }
+        62% {
+          transform: translate(-5%, 2%);
+        }
+        75% {
+          transform: translate(8%, 6%);
+        }
+        87% {
+          transform: translate(-2%, -5%);
+        }
+        100% {
+          transform: translate(0%, 0%);
+        }
+      }
+
+      /* Fine gold grid */
+      .hero__grid {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(200, 164, 106, 0.032) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(200, 164, 106, 0.032) 1px,
+            transparent 1px
+          );
+        background-size: 76px 76px;
+      }
+
+      /* Diagonal light ray */
+      .hero__ray {
+        position: absolute;
+        top: -30%;
+        right: 12%;
+        width: 550px;
+        height: 130%;
+        background: linear-gradient(
+          180deg,
+          rgba(92, 158, 53, 0.07) 0%,
+          transparent 72%
+        );
+        transform: rotate(-16deg);
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      /* Floating leaf particles */
+      .hero__particles {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      .leaf {
+        position: absolute;
+        bottom: -40px;
+        opacity: 0;
+        animation: leaf-rise var(--dur) var(--delay) ease-in infinite;
+        will-change: transform, opacity;
+      }
+
+      @keyframes leaf-rise {
+        0% {
+          opacity: 0;
+          transform: translateY(0) rotate(0deg) scale(0.75);
+        }
+        8% {
+          opacity: 0.5;
+        }
+        85% {
+          opacity: 0.12;
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-108vh) rotate(450deg) scale(1.1);
+        }
+      }
+
+      /* ─────────────────────────────────────────
+       HERO — INNER GRID
+    ───────────────────────────────────────── */
+      .hero__inner {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        max-width: var(--max-w);
+        margin-inline: auto;
+        padding-inline: var(--pad-x);
+        padding-top: calc(var(--nav-h) + 48px);
+        padding-bottom: 68px;
+        display: grid;
+        grid-template-columns: 1.08fr 0.92fr;
+        gap: 56px;
+        align-items: center;
+      }
+
+      /* ─────────────────────────────────────────
+       HERO LEFT
+    ───────────────────────────────────────── */
+      .hero__left {
+        animation: slide-left 1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+      }
+
+      @keyframes slide-left {
+        from {
+          opacity: 0;
+          transform: translateX(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      /* Eyebrow badge */
+      .hero__eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 30px;
+        padding: 7px 15px 7px 11px;
+        border: 1px solid rgba(200, 164, 106, 0.28);
+      }
+
+      .hero__eyebrow-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--clr-gold);
+        flex-shrink: 0;
+        animation: dot-pulse 2.4s ease-in-out infinite;
+      }
+
+      @keyframes dot-pulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(200, 164, 106, 0.55);
+        }
+        50% {
+          box-shadow: 0 0 0 7px rgba(200, 164, 106, 0);
+        }
+      }
+
+      .hero__eyebrow-label {
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--clr-gold);
+      }
+
+      /* Headline */
+      .hero__headline {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(46px, 5.4vw, 80px);
+        font-weight: 300;
+        line-height: 1.06;
+        color: var(--clr-cream);
+        margin-bottom: 28px;
+        letter-spacing: -0.015em;
+      }
+
+      .hero__headline .hl-em {
+        font-style: italic;
+        color: var(--clr-gold);
+      }
+
+      .hero__headline .hl-bold {
+        display: block;
+        font-weight: 600;
+        color: var(--clr-white);
+        letter-spacing: -0.02em;
+      }
+
+      .hero__headline .hl-light {
+        display: block;
+        font-weight: 300;
+      }
+
+      /* Description */
+      .hero__desc {
+        font-size: 16px;
+        font-weight: 300;
+        line-height: 1.84;
+        color: var(--clr-muted);
+        max-width: 425px;
+        margin-bottom: 46px;
+      }
+
+      /* CTA row */
+      .hero__ctas {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        flex-wrap: wrap;
+        margin-bottom: 54px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 11px;
+        font-family: "Jost", sans-serif;
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        text-decoration: none;
+        cursor: pointer;
+        border: none;
+        transition: all 0.3s ease;
+      }
+
+      .btn--primary {
+        padding: 17px 42px;
+        background: var(--clr-gold);
+        color: var(--clr-forest);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn--primary::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.22),
+          transparent
+        );
+        transform: translateX(-100%);
+        transition: transform 0.55s ease;
+      }
+
+      .btn--primary:hover::after {
+        transform: translateX(100%);
+      }
+
+      .btn--primary:hover {
+        background: var(--clr-gold-lt);
+        transform: translateY(-2px);
+        box-shadow: 0 14px 40px rgba(200, 164, 106, 0.44);
+      }
+
+      .btn--outline {
+        padding: 16px 40px;
+        background: transparent;
+        color: var(--clr-cream);
+        border: 1px solid rgba(243, 237, 227, 0.28);
+      }
+
+      .btn--outline:hover {
+        border-color: rgba(243, 237, 227, 0.6);
+        background: rgba(243, 237, 227, 0.04);
+      }
+
+      .btn__arr {
+        width: 15px;
+        height: 15px;
+        flex-shrink: 0;
+        transition: transform 0.3s ease;
+      }
+
+      .btn:hover .btn__arr {
+        transform: translateX(4px);
+      }
+
+      /* Stats row */
+      .hero__stats {
+        display: flex;
+        padding-top: 34px;
+        border-top: 1px solid rgba(200, 164, 106, 0.17);
+      }
+
+      .stat {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        padding-right: 40px;
+        margin-right: 40px;
+        border-right: 1px solid rgba(200, 164, 106, 0.12);
+      }
+
+      .stat:last-child {
+        border-right: none;
+        margin-right: 0;
+        padding-right: 0;
+      }
+
+      .stat__num {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 43px;
+        font-weight: 600;
+        color: var(--clr-gold);
+        line-height: 1;
+        letter-spacing: -0.02em;
+      }
+
+      .stat__lbl {
+        font-size: 10.5px;
+        font-weight: 400;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: var(--clr-muted);
+      }
+
+      /* ─────────────────────────────────────────
+       HERO RIGHT — IMAGE COMPOSITION
+    ───────────────────────────────────────── */
+      .hero__right {
+        position: relative;
+        height: 590px;
+        animation: slide-right 1s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
+      }
+
+      @keyframes slide-right {
+        from {
+          opacity: 0;
+          transform: translateX(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      /* Offset ring decorations */
+      .hero__ring {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 87%;
+        height: 91%;
+        border-radius: 190px 190px 0 0;
+        border: 1px solid rgba(200, 164, 106, 0.16);
+        pointer-events: none;
+      }
+
+      .hero__ring--2 {
+        top: 16px;
+        right: -16px;
+        border-color: rgba(200, 164, 106, 0.09);
+      }
+      .hero__ring--3 {
+        top: 32px;
+        right: -32px;
+        border-color: rgba(200, 164, 106, 0.05);
+      }
+
+      /* Main arch frame */
+      .hero__frame {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 87%;
+        height: 91%;
+        border-radius: 190px 190px 0 0;
+        overflow: hidden;
+        background: radial-gradient(
+          ellipse 100% 110% at 50% 90%,
+          #1b3a1b 0%,
+          #0e230e 55%,
+          #091409 100%
+        );
+        box-shadow: 0 36px 90px rgba(0, 0, 0, 0.55);
+      }
+
+      .hero__frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 25%;
+        filter: saturate(0.85) brightness(0.82);
+        transition:
+          transform 8s ease,
+          filter 0.4s;
+      }
+
+      .hero__frame:hover img {
+        transform: scale(1.04);
+        filter: saturate(0.95) brightness(0.88);
+      }
+
+      /* Bottom-fade overlay on image */
+      .hero__frame-fade {
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(to top, rgba(9, 15, 9, 0.65) 0%, transparent 45%),
+          rgba(14, 36, 14, 0.2);
+        pointer-events: none;
+      }
+
+      /* Floating rating card (top-left of image) */
+      .card {
+        position: absolute;
+        background: rgba(8, 14, 8, 0.88);
+        backdrop-filter: blur(22px);
+        -webkit-backdrop-filter: blur(22px);
+        border: 1px solid rgba(200, 164, 106, 0.22);
+      }
+
+      .card--rating {
+        top: 52px;
+        left: 0;
+        padding: 14px 18px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        animation: float-a 5.5s ease-in-out infinite 0.8s;
+      }
+
+      @keyframes float-a {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-7px);
+        }
+      }
+
+      .card--rating .stars {
+        display: flex;
+        gap: 2px;
+      }
+
+      .card--rating .stars svg {
+        width: 11px;
+        height: 11px;
+      }
+
+      .card--rating .score {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 22px;
+        font-weight: 600;
+        color: var(--clr-cream);
+        line-height: 1;
+      }
+
+      .card--rating .score-lbl {
+        font-size: 9.5px;
+        font-weight: 400;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--clr-muted);
+        margin-top: 2px;
+      }
+
+      /* Floating professionals card (bottom-left) */
+      .card--pros {
+        bottom: 58px;
+        left: -12px;
+        padding: 18px 24px;
+        min-width: 185px;
+        animation: float-b 5s ease-in-out infinite 1.6s;
+      }
+
+      @keyframes float-b {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+
+      .card__tag {
+        font-size: 9.5px;
+        font-weight: 500;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--clr-gold);
+        margin-bottom: 5px;
+      }
+
+      .card__val {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 36px;
+        font-weight: 600;
+        color: var(--clr-cream);
+        line-height: 1;
+        margin-bottom: 3px;
+      }
+
+      .card__sub {
+        font-size: 11.5px;
+        font-weight: 300;
+        color: var(--clr-muted);
+      }
+
+      /* Scroll indicator */
+      .hero__scroll {
+        position: absolute;
+        bottom: 34px;
+        left: 50%;
+        translate: -50% 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        opacity: 0;
+        animation: fade-up 0.8s ease 2.2s forwards;
+        pointer-events: none;
+        z-index: 10;
+      }
+
+      @keyframes fade-up {
+        to {
+          opacity: 0.5;
+        }
+      }
+
+      .hero__scroll-bar {
+        width: 1px;
+        height: 50px;
+        background: linear-gradient(to bottom, var(--clr-gold), transparent);
+        transform-origin: top;
+        animation: scroll-tick 2.2s ease-in-out infinite;
+      }
+
+      @keyframes scroll-tick {
+        0% {
+          transform: scaleY(0);
+          transform-origin: top;
+        }
+        48% {
+          transform: scaleY(1);
+          transform-origin: top;
+        }
+        52% {
+          transform: scaleY(1);
+          transform-origin: bottom;
+        }
+        100% {
+          transform: scaleY(0);
+          transform-origin: bottom;
+        }
+      }
+
+      .hero__scroll-txt {
+        font-size: 9px;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        color: var(--clr-muted);
+        writing-mode: vertical-lr;
+      }
+
+      /* ─────────────────────────────────────────
+       FEATURES STRIP
+    ───────────────────────────────────────── */
+      .features {
+        position: relative;
+        z-index: 10;
+        background: rgba(13, 26, 13, 0.97);
+        border-top: 1px solid rgba(200, 164, 106, 0.12);
+      }
+
+      .features__inner {
+        max-width: var(--max-w);
+        margin-inline: auto;
+        padding-inline: var(--pad-x);
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .feature {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 32px 36px;
+        border-right: 1px solid rgba(200, 164, 106, 0.1);
+        transition: background 0.3s;
+        cursor: default;
+      }
+
+      .feature:last-child {
+        border-right: none;
+      }
+
+      .feature:hover {
+        background: rgba(200, 164, 106, 0.04);
+      }
+
+      .feature__ico {
+        width: 46px;
+        height: 46px;
+        flex-shrink: 0;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(200, 164, 106, 0.24);
+        padding: 11px;
+      }
+
+      .feature__ico svg {
+        width: 22px;
+        height: 22px;
+      }
+
+      .feature__title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 17.5px;
+        font-weight: 600;
+        color: var(--clr-cream);
+        margin-bottom: 5px;
+        letter-spacing: 0.01em;
+      }
+
+      .feature__desc {
+        font-size: 12.5px;
+        font-weight: 300;
+        line-height: 1.62;
+        color: var(--clr-muted);
+      }
+
+      /* ─────────────────────────────────────────
+       ABOUT SECTION
+    ───────────────────────────────────────── */
+      .about {
+        background: var(--clr-deep);
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Ambient glow top-right */
+      .about::after {
+        content: "";
+        position: absolute;
+        top: -15%;
+        right: -8%;
+        width: 480px;
+        height: 480px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(44, 90, 44, 0.09) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+
+      .about__inner {
+        position: relative;
+        z-index: 2;
+        max-width: var(--max-w);
+        margin-inline: auto;
+        padding-inline: var(--pad-x);
+        padding-top: 124px;
+        padding-bottom: 112px;
+        display: grid;
+        grid-template-columns: 0.94fr 1.06fr;
+        gap: 80px;
+        align-items: center;
+      }
+
+      /* ── Image side ── */
+      .about__media {
+        position: relative;
+        height: 640px;
+      }
+
+      /* Decorative offset border layers */
+      .about__img-border {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 84%;
+        height: 88%;
+        border-radius: 0 100px 0 100px;
+        border: 1px solid rgba(200, 164, 106, 0.16);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .about__img-border--2 {
+        top: -14px;
+        left: -14px;
+        border-color: rgba(200, 164, 106, 0.08);
+      }
+
+      /* Main image frame — diagonal rounded corners */
+      .about__img-wrap {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 84%;
+        height: 88%;
+        border-radius: 0 100px 0 100px;
+        overflow: hidden;
+        background: radial-gradient(
+          ellipse at 50% 80%,
+          #1b3a1b 0%,
+          #0e230e 55%,
+          #091409 100%
+        );
+        box-shadow:
+          0 42px 100px rgba(0, 0, 0, 0.55),
+          inset 0 0 0 1px rgba(200, 164, 106, 0.1);
+        z-index: 1;
+      }
+
+      .about__img-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 20%;
+        filter: saturate(0.87) brightness(0.83);
+        transition:
+          transform 9s ease,
+          filter 0.4s;
+      }
+
+      .about__img-wrap:hover img {
+        transform: scale(1.03);
+        filter: saturate(0.94) brightness(0.88);
+      }
+
+      /* Dual-direction gradient overlay on image */
+      .about__img-fade {
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(
+            to right,
+            transparent 55%,
+            rgba(13, 26, 13, 0.45) 100%
+          ),
+          linear-gradient(to top, rgba(9, 15, 9, 0.55) 0%, transparent 38%);
+        pointer-events: none;
+      }
+
+      /* Floating "Est." badge */
+      .about__badge {
+        position: absolute;
+        bottom: 68px;
+        right: 14px;
+        width: 106px;
+        height: 106px;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        background: rgba(9, 15, 9, 0.88);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(200, 164, 106, 0.28);
+        z-index: 3;
+        animation: float-b 5.5s ease-in-out infinite 0.5s;
+      }
+
+      .about__badge-est {
+        font-size: 8.5px;
+        font-weight: 500;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--clr-muted);
+      }
+
+      .about__badge-year {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 26px;
+        font-weight: 600;
+        color: var(--clr-gold);
+        line-height: 1;
+      }
+
+      .about__badge-lbl {
+        font-size: 8px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--clr-muted);
+      }
+
+      /* Decorative botanical SVG watermark */
+      .about__botanical {
+        position: absolute;
+        top: 24px;
+        right: 0;
+        width: 130px;
+        pointer-events: none;
+        z-index: 2;
+        opacity: 0.11;
+      }
+
+      /* ── Text side ── */
+      .about__content {
+        padding-left: 8px;
+      }
+
+      .about__eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 26px;
+      }
+
+      .about__eyebrow-line {
+        width: 30px;
+        height: 1px;
+        background: var(--clr-gold);
+        flex-shrink: 0;
+      }
+
+      .about__eyebrow-label {
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--clr-gold);
+      }
+
+      .about__heading {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(32px, 3.4vw, 52px);
+        font-weight: 300;
+        line-height: 1.12;
+        color: var(--clr-cream);
+        margin-bottom: 24px;
+        letter-spacing: -0.01em;
+      }
+
+      .about__heading strong {
+        display: block;
+        font-weight: 600;
+        color: var(--clr-white);
+        letter-spacing: -0.015em;
+      }
+
+      .about__text {
+        font-size: 15.5px;
+        font-weight: 300;
+        line-height: 1.88;
+        color: var(--clr-muted);
+        margin-bottom: 40px;
+        max-width: 475px;
+      }
+
+      /* Vision / Mission cards */
+      .about__cards {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 42px;
+      }
+
+      .about__card {
+        padding: 26px 22px;
+        border: 1px solid rgba(200, 164, 106, 0.16);
+        position: relative;
+        overflow: hidden;
+        transition:
+          border-color 0.35s,
+          background 0.35s;
+      }
+
+      /* Gold left bar accent */
+      .about__card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 2px;
+        height: 0;
+        background: var(--clr-gold);
+        transition: height 0.45s ease;
+      }
+
+      .about__card:hover {
+        border-color: rgba(200, 164, 106, 0.34);
+        background: rgba(200, 164, 106, 0.028);
+      }
+      .about__card:hover::before {
+        height: 100%;
+      }
+
+      /* Mission card — green tint */
+      .about__card--mission {
+        background: rgba(44, 90, 44, 0.14);
+        border-color: rgba(92, 158, 53, 0.22);
+      }
+
+      .about__card--mission::before {
+        background: var(--clr-vivid);
+      }
+
+      .about__card--mission:hover {
+        background: rgba(44, 90, 44, 0.24);
+        border-color: rgba(92, 158, 53, 0.4);
+      }
+
+      .about__card-ico {
+        width: 32px;
+        height: 32px;
+        margin-bottom: 14px;
+      }
+
+      .about__card-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--clr-cream);
+        margin-bottom: 8px;
+      }
+
+      .about__card--mission .about__card-title {
+        color: var(--clr-white);
+      }
+
+      .about__card-text {
+        font-size: 13px;
+        font-weight: 300;
+        line-height: 1.72;
+        color: var(--clr-muted);
+      }
+
+      /* "Our Story" link */
+      .about__link {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 11.5px;
+        font-weight: 500;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--clr-gold);
+        text-decoration: none;
+        transition:
+          gap 0.3s,
+          color 0.3s;
+      }
+
+      .about__link:hover {
+        gap: 16px;
+        color: var(--clr-gold-lt);
+      }
+
+      .about__link svg {
+        width: 15px;
+        height: 15px;
+        flex-shrink: 0;
+      }
+
+      /* ─────────────────────────────────────────
+       TRUST / LOGOS STRIP
+    ───────────────────────────────────────── */
+      .trust {
+        background: var(--clr-forest);
+        border-top: 1px solid rgba(200, 164, 106, 0.08);
+        padding: 68px 0;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .trust__inner {
+        max-width: var(--max-w);
+        margin-inline: auto;
+        padding-inline: var(--pad-x);
+      }
+
+      .trust__heading {
+        text-align: center;
+        font-size: 13px;
+        font-weight: 400;
+        letter-spacing: 0.05em;
+        color: var(--clr-muted);
+        margin-bottom: 44px;
+        line-height: 1.7;
+      }
+
+      .trust__heading strong {
+        font-weight: 600;
+        color: var(--clr-cream);
+      }
+
+      /* Logo row */
+      .trust__logos {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 52px;
+        flex-wrap: wrap;
+      }
+
+      .trust__logo {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        opacity: 0.35;
+        transition: opacity 0.3s;
+        cursor: default;
+        filter: grayscale(1);
+      }
+
+      .trust__logo:hover {
+        opacity: 0.65;
+        filter: grayscale(0);
+      }
+
+      /* Text-based logo styles — varied to simulate real brands */
+      .tl {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--clr-cream);
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
+
+      .tl--sans {
+        font-family: "Jost", sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .tl--italic {
+        font-style: italic;
+      }
+
+      .tl--dot::after {
+        content: "·";
+        color: var(--clr-gold);
+        margin-left: 1px;
+      }
+
+      /* Divider lines between logos */
+      .trust__divider {
+        width: 1px;
+        height: 20px;
+        background: rgba(200, 164, 106, 0.15);
+        flex-shrink: 0;
+      }
+
+      /* ─────────────────────────────────────────
+       SERVICES SECTION — light / cream tone
+    ───────────────────────────────────────── */
+      .services {
+        background: var(--clr-cream);
+        position: relative;
+        overflow: hidden;
+        padding: 128px 0 136px;
+      }
+
+      /* Warm grain texture (very subtle on light bg) */
+      .services::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.022;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size: 180px 180px;
+      }
+
+      /* Large faint botanical circle bg */
+      .services__bg-orb {
+        position: absolute;
+        bottom: -12%;
+        right: -6%;
+        width: 520px;
+        height: 520px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(44, 90, 44, 0.055) 0%,
+          transparent 68%
+        );
+        pointer-events: none;
+      }
+
+      .services__inner {
+        position: relative;
+        z-index: 2;
+        max-width: var(--max-w);
+        margin-inline: auto;
+        padding-inline: var(--pad-x);
+      }
+
+      /* ── Section header (split layout) ── */
+      .services__hd {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+        align-items: flex-end;
+        margin-bottom: 76px;
+      }
+
+      .services__hd-left {
+      }
+
+      .services__eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 18px;
+      }
+
+      .services__eyebrow-line {
+        width: 30px;
+        height: 1px;
+        background: var(--clr-gold);
+        flex-shrink: 0;
+      }
+
+      .services__eyebrow-label {
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--clr-gold);
+      }
+
+      .services__heading {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(44px, 5.2vw, 74px);
+        font-weight: 300;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: var(--clr-forest);
+      }
+
+      .services__heading strong {
+        display: block;
+        font-weight: 600;
+      }
+
+      .services__hd-right {
+        padding-bottom: 6px;
+      }
+
+      .services__sub {
+        font-size: 15.5px;
+        font-weight: 300;
+        line-height: 1.88;
+        color: rgba(9, 15, 9, 0.5);
+        max-width: 400px;
+        margin-bottom: 30px;
+      }
+
+      /* "View All Services" link in header */
+      .services__all {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--clr-forest);
+        text-decoration: none;
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(9, 15, 9, 0.25);
+        transition:
+          gap 0.3s,
+          border-color 0.3s;
+      }
+
+      .services__all:hover {
+        gap: 16px;
+        border-color: var(--clr-gold);
+        color: var(--clr-accent);
+      }
+      .services__all svg {
+        width: 13px;
+        height: 13px;
+        flex-shrink: 0;
+      }
+
+      /* ── Services grid ── */
+      .services__grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        /* Gap-as-border-line technique */
+        gap: 1px;
+        background: rgba(9, 15, 9, 0.1);
+        border: 1px solid rgba(9, 15, 9, 0.1);
+      }
+
+      /* ── Service card ── */
+      .svc {
+        background: var(--clr-cream);
+        padding: 46px 38px 42px;
+        position: relative;
+        overflow: hidden;
+        cursor: default;
+        transition: background 0.35s;
+      }
+
+      /* Top gold sweep bar */
+      .svc::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(
+          to right,
+          var(--clr-gold),
+          var(--clr-vivid)
+        );
+        transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      /* Large faint ordinal watermark */
+      .svc::after {
+        content: attr(data-num);
+        position: absolute;
+        bottom: -14px;
+        right: 18px;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 96px;
+        font-weight: 600;
+        color: rgba(9, 15, 9, 0.045);
+        line-height: 1;
+        pointer-events: none;
+        letter-spacing: -0.04em;
+        transition: color 0.35s;
+      }
+
+      .svc:hover {
+        background: #ffffff;
+      }
+      .svc:hover::before {
+        width: 100%;
+      }
+      .svc:hover::after {
+        color: rgba(9, 15, 9, 0.065);
+      }
+
+      /* Icon container */
+      .svc__ico {
+        width: 52px;
+        height: 52px;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(9, 15, 9, 0.14);
+        margin-bottom: 26px;
+        flex-shrink: 0;
+        transition:
+          border-color 0.35s,
+          background 0.35s;
+      }
+
+      .svc:hover .svc__ico {
+        border-color: rgba(200, 164, 106, 0.55);
+        background: rgba(200, 164, 106, 0.07);
+      }
+
+      .svc__ico svg {
+        width: 22px;
+        height: 22px;
+        stroke: var(--clr-forest);
+        fill: none;
+        stroke-width: 1.4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        transition: stroke 0.35s;
+      }
+
+      .svc:hover .svc__ico svg {
+        stroke: var(--clr-accent);
+      }
+
+      /* Card text */
+      .svc__name {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--clr-forest);
+        margin-bottom: 11px;
+        letter-spacing: 0.01em;
+        line-height: 1.2;
+      }
+
+      .svc__desc {
+        font-size: 13.5px;
+        font-weight: 300;
+        line-height: 1.78;
+        color: rgba(9, 15, 9, 0.52);
+      }
+
+      /* Hover-reveal "Learn more" link */
+      .svc__more {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 22px;
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--clr-gold);
+        text-decoration: none;
+        opacity: 0;
+        transform: translateY(8px);
+        transition:
+          opacity 0.3s ease 0.05s,
+          transform 0.3s ease 0.05s,
+          gap 0.25s;
+      }
+
+      .svc:hover .svc__more {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .svc__more:hover {
+        gap: 13px;
+      }
+      .svc__more svg {
+        width: 12px;
+        height: 12px;
+      }
+
+      /* ─────────────────────────────────────────
+       GALLERY / PROJECTS SECTION
+    ───────────────────────────────────────── */
+      .gallery {
+        background: var(--clr-forest);
+        padding: 128px 0 140px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Subtle top divider line */
+      .gallery::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: var(--pad-x);
+        right: var(--pad-x);
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          rgba(200, 164, 106, 0.2),
+          transparent
+        );
+        pointer-events: none;
+      }
+
+      /* Atmospheric corner orb */
+      .gallery__orb {
+        position: absolute;
+        top: -10%;
+        left: -8%;
+        width: 560px;
+        height: 560px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(44, 90, 44, 0.07) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+
+      .gallery__inner {
+        position: relative;
+        z-index: 2;
+        max-width: var(--max-w);
+        margin-inline: auto;
+        padding-inline: var(--pad-x);
+      }
+
+      /* ── Section header ── */
+      .gallery__hd {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 32px;
+        margin-bottom: 56px;
+        flex-wrap: wrap;
+      }
+
+      .gallery__eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 18px;
+      }
+
+      .gallery__eyebrow-line {
+        width: 30px;
+        height: 1px;
+        background: var(--clr-gold);
+        flex-shrink: 0;
+      }
+
+      .gallery__eyebrow-label {
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--clr-gold);
+      }
+
+      .gallery__heading {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(40px, 4.6vw, 66px);
+        font-weight: 300;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: var(--clr-cream);
+      }
+
+      .gallery__heading strong {
+        display: block;
+        font-weight: 600;
+        color: var(--clr-white);
+      }
+
+      /* Category filter pills */
+      .gallery__filter {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex-wrap: wrap;
+        padding-bottom: 4px;
+      }
+
+      .gal-btn {
+        padding: 9px 20px;
+        font-family: "Jost", sans-serif;
+        font-size: 10.5px;
+        font-weight: 400;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--clr-muted);
+        background: transparent;
+        border: 1px solid transparent;
+        cursor: pointer;
+        transition:
+          color 0.25s,
+          border-color 0.25s,
+          background 0.25s;
+      }
+
+      .gal-btn:hover {
+        color: var(--clr-cream);
+        border-color: rgba(200, 164, 106, 0.22);
+      }
+
+      .gal-btn.is-active {
+        color: var(--clr-forest);
+        background: var(--clr-gold);
+        border-color: var(--clr-gold);
+      }
+
+      /* ── Asymmetric CSS Grid ── */
+      .gallery__grid {
+        display: grid;
+        grid-template-columns: 1.55fr 1fr 1fr;
+        grid-template-rows: 295px 275px 310px;
+        gap: 5px;
+      }
+
+      /* Explicit placements */
+      .gal-item:nth-child(1) {
+        grid-column: 1;
+        grid-row: 1 / 3;
+      } /* tall left */
+      .gal-item:nth-child(2) {
+        grid-column: 2;
+        grid-row: 1;
+      }
+      .gal-item:nth-child(3) {
+        grid-column: 3;
+        grid-row: 1;
+      }
+      .gal-item:nth-child(4) {
+        grid-column: 2;
+        grid-row: 2;
+      }
+      .gal-item:nth-child(5) {
+        grid-column: 3;
+        grid-row: 2;
+      }
+      .gal-item:nth-child(6) {
+        grid-column: 1 / 4;
+        grid-row: 3;
+      } /* full-width strip */
+
+      /* ── Photo item ── */
+      .gal-item {
+        position: relative;
+        overflow: hidden;
+        background: var(--clr-mid);
+        cursor: pointer;
+      }
+
+      .gal-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: saturate(0.82) brightness(0.84);
+        transition:
+          transform 8s cubic-bezier(0.25, 1, 0.5, 1),
+          filter 0.5s ease;
+        display: block;
+      }
+
+      .gal-item:hover img {
+        transform: scale(1.07);
+        filter: saturate(0.95) brightness(0.9);
+      }
+
+      /* Dark gradient overlay — always present, lightens on hover */
+      .gal-item__veil {
+        position: absolute;
+        inset: 0;
+        background: rgba(9, 15, 9, 0.38);
+        transition: background 0.45s ease;
+        pointer-events: none;
+      }
+
+      .gal-item:hover .gal-item__veil {
+        background: rgba(9, 15, 9, 0.1);
+      }
+
+      /* Bottom info panel — slides up on hover */
+      .gal-item__info {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 28px 26px;
+        background: linear-gradient(
+          to top,
+          rgba(9, 15, 9, 0.88) 0%,
+          transparent 100%
+        );
+        transform: translateY(10px);
+        opacity: 0;
+        transition:
+          opacity 0.38s ease,
+          transform 0.38s ease;
+        pointer-events: none;
+      }
+
+      .gal-item:hover .gal-item__info {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .gal-item__cat {
+        font-size: 9.5px;
+        font-weight: 500;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--clr-gold);
+        margin-bottom: 5px;
+      }
+
+      .gal-item__title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--clr-white);
+        line-height: 1.2;
+        margin-bottom: 12px;
+      }
+
+      .gal-item__view {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(243, 237, 227, 0.75);
+        text-decoration: none;
+        transition:
+          gap 0.28s,
+          color 0.28s;
+      }
+
+      .gal-item__view:hover {
+        gap: 13px;
+        color: var(--clr-cream);
+      }
+      .gal-item__view svg {
+        width: 11px;
+        height: 11px;
+        flex-shrink: 0;
+      }
+
+      /* First item (tall) — larger title */
+      .gal-item:nth-child(1) .gal-item__info {
+        padding: 36px 32px;
+      }
+      .gal-item:nth-child(1) .gal-item__title {
+        font-size: 28px;
+      }
+
+      /* Last item (full-width) — side-by-side layout */
+      .gal-item:nth-child(6) .gal-item__info {
+        padding: 32px 40px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .gal-item:nth-child(6) .gal-item__title {
+        font-size: 26px;
+        margin-bottom: 0;
+      }
+
+      /* Gold corner accent on hover */
+      .gal-item::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--clr-gold);
+        transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        pointer-events: none;
+      }
+
+      .gal-item:hover::after {
+        width: 100%;
+      }
+
+      /* Hidden state for filter */
+      .gal-item.is-hidden {
+        opacity: 0;
+        pointer-events: none;
+        transform: scale(0.96);
+        transition:
+          opacity 0.35s,
+          transform 0.35s;
+      }
+
+      /* ── Bottom CTA ── */
+      .gallery__footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 52px;
+        padding-top: 40px;
+        border-top: 1px solid rgba(200, 164, 106, 0.12);
+        gap: 24px;
+        flex-wrap: wrap;
+      }
+
+      .gallery__count {
+        font-size: 13px;
+        font-weight: 300;
+        color: var(--clr-muted);
+      }
+
+      .gallery__count strong {
+        font-weight: 500;
+        color: var(--clr-cream);
+      }
+
+      /* ─────────────────────────────────────────
+       WHY CHOOSE US (dark)
+    ───────────────────────────────────────── */
+      .why {
+        background: var(--clr-mid);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .why::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: var(--pad-x);
+        right: var(--pad-x);
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          rgba(200, 164, 106, 0.18),
+          transparent
+        );
+        pointer-events: none;
+      }
+
+      .why::after {
+        content: "";
+        position: absolute;
+        bottom: -20%;
+        right: -10%;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(44, 90, 44, 0.1) 0%,
+          transparent 68%
+        );
+        pointer-events: none;
+      }
+
+      .why__inner {
+        position: relative;
+        z-index: 2;
+        max-width: var(--max-w);
+        margin-inline: auto;
+        padding-inline: var(--pad-x);
+        padding-top: 124px;
+        padding-bottom: 120px;
+        display: grid;
+        grid-template-columns: 1.08fr 0.92fr;
+        gap: 72px;
+        align-items: center;
+      }
+
+      /* ─── Left column ─── */
+      .why__eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 26px;
+      }
+
+      .why__eyebrow-line {
+        width: 30px;
+        height: 1px;
+        background: var(--clr-gold);
+        flex-shrink: 0;
+      }
+
+      .why__eyebrow-label {
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--clr-gold);
+      }
+
+      .why__heading {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(34px, 3.6vw, 54px);
+        font-weight: 300;
+        line-height: 1.1;
+        color: var(--clr-cream);
+        margin-bottom: 20px;
+        letter-spacing: -0.01em;
+      }
+
+      .why__heading strong {
+        display: block;
+        font-weight: 600;
+        color: var(--clr-white);
+      }
+
+      .why__intro {
+        font-size: 15px;
+        font-weight: 300;
+        line-height: 1.85;
+        color: var(--clr-muted);
+        margin-bottom: 48px;
+        max-width: 460px;
+      }
+
+      .why__list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+      }
+
+      .why__item {
+        display: flex;
+        align-items: flex-start;
+        gap: 18px;
+      }
+
+      .why__item-ico {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(200, 164, 106, 0.2);
+        flex-shrink: 0;
+        transition:
+          border-color 0.3s,
+          background 0.3s;
+      }
+
+      .why__item:hover .why__item-ico {
+        border-color: rgba(200, 164, 106, 0.44);
+        background: rgba(200, 164, 106, 0.07);
+      }
+
+      .why__item-ico svg {
+        width: 19px;
+        height: 19px;
+        stroke: var(--clr-gold);
+        fill: none;
+        stroke-width: 1.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .why__item-body {
+        padding-top: 2px;
+      }
+
+      .why__item-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 17px;
+        font-weight: 600;
+        color: var(--clr-cream);
+        margin-bottom: 4px;
+      }
+
+      .why__item-desc {
+        font-size: 13px;
+        font-weight: 300;
+        line-height: 1.68;
+        color: var(--clr-muted);
+      }
+
+      /* ─── Right column — image ─── */
+      .why__right {
+        position: relative;
+        height: 560px;
+      }
+
+      .why__img-ring {
+        position: absolute;
+        top: 12px;
+        right: -12px;
+        width: 88%;
+        height: 86%;
+        border-radius: 60px 0 60px 0;
+        border: 1px solid rgba(200, 164, 106, 0.14);
+        pointer-events: none;
+      }
+
+      .why__img-wrap {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 88%;
+        height: 86%;
+        border-radius: 60px 0 60px 0;
+        overflow: hidden;
+        background: radial-gradient(
+          ellipse at 50% 80%,
+          #1b3a1b 0%,
+          #091409 100%
+        );
+        box-shadow: 0 36px 80px rgba(0, 0, 0, 0.5);
+      }
+
+      .why__img-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 20%;
+        filter: saturate(0.86) brightness(0.83);
+        transition: transform 9s ease;
+      }
+
+      .why__img-wrap:hover img {
+        transform: scale(1.04);
+      }
+
+      .why__img-overlay {
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(to left, transparent 55%, rgba(23, 51, 23, 0.4) 100%),
+          linear-gradient(to top, rgba(9, 15, 9, 0.5) 0%, transparent 40%);
+        pointer-events: none;
+      }
+
+      /* Floating award badge */
+      .why__award {
+        position: absolute;
+        bottom: 60px;
+        left: 0;
+        background: rgba(9, 15, 9, 0.88);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(200, 164, 106, 0.22);
+        padding: 16px 22px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        animation: float-a 5s ease-in-out infinite 1s;
+      }
+
+      .why__award-ico {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(200, 164, 106, 0.3);
+        flex-shrink: 0;
+      }
+
+      .why__award-ico svg {
+        width: 20px;
+        height: 20px;
+        stroke: var(--clr-gold);
+        fill: none;
+        stroke-width: 1.4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .why__award-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--clr-cream);
+        line-height: 1.2;
+      }
+
+      .why__award-sub {
+        font-size: 10.5px;
+        font-weight: 300;
+        color: var(--clr-muted);
+        margin-top: 2px;
+      }
+
+      /* ─────────────────────────────────────────
+       TESTIMONIAL SLIDER (light/cream)
+    ───────────────────────────────────────── */
+      .testi {
+        background: var(--clr-cream);
+        position: relative;
+        overflow: hidden;
+        padding: 104px 0 116px;
+      }
+
+      .testi::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.018;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size: 180px 180px;
+      }
+
+      .testi__inner {
+        position: relative;
+        z-index: 2;
+        max-width: 840px;
+        margin-inline: auto;
+        padding-inline: var(--pad-x);
+        text-align: center;
+      }
+
+      /* Giant decorative open-quote */
+      .testi__qmark {
+        display: block;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 160px;
+        font-weight: 600;
+        line-height: 0.6;
+        color: rgba(9, 15, 9, 0.065);
+        user-select: none;
+        margin-bottom: -8px;
+        letter-spacing: -0.06em;
+      }
+
+      /* Gold stars */
+      .testi__stars {
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        margin-bottom: 34px;
+      }
+
+      .testi__stars svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      /* Slide track */
+      .testi__track {
+        position: relative;
+        min-height: 220px;
+      }
+
+      .testi__slide {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transform: translateY(16px);
+        transition:
+          opacity 0.5s ease,
+          transform 0.5s ease;
+        pointer-events: none;
+      }
+
+      .testi__slide.is-active {
+        position: relative;
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+
+      .testi__quote {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(19px, 2.3vw, 27px);
+        font-weight: 400;
+        font-style: italic;
+        line-height: 1.68;
+        color: var(--clr-forest);
+        margin-bottom: 38px;
+      }
+
+      .testi__client {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .testi__avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 1px solid rgba(200, 164, 106, 0.35);
+        display: grid;
+        place-items: center;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 19px;
+        font-weight: 600;
+        color: var(--clr-gold);
+        background: rgba(9, 15, 9, 0.06);
+        margin-bottom: 5px;
+        overflow: hidden;
+      }
+
+      .testi__name {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 17px;
+        font-weight: 600;
+        color: var(--clr-forest);
+      }
+
+      .testi__role {
+        font-size: 10.5px;
+        font-weight: 400;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--clr-gold);
+      }
+
+      /* Controls */
+      .testi__controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        margin-top: 50px;
+      }
+
+      .testi__arrow {
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(9, 15, 9, 0.14);
+        background: transparent;
+        cursor: pointer;
+        color: var(--clr-forest);
+        transition:
+          border-color 0.28s,
+          background 0.28s;
+      }
+
+      .testi__arrow:hover {
+        border-color: var(--clr-gold);
+        background: rgba(200, 164, 106, 0.08);
+      }
+
+      .testi__arrow svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      .testi__dots {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .testi__dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: rgba(9, 15, 9, 0.17);
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        transition:
+          background 0.3s,
+          width 0.35s,
+          border-radius 0.35s;
+      }
+
+      .testi__dot.is-active {
+        background: var(--clr-gold);
+        width: 26px;
+        border-radius: 4px;
+      }
+
+      /* Responsive */
+      @media (max-width: 900px) {
+        .why__inner {
+          grid-template-columns: 1fr;
+          padding-top: 80px;
+          padding-bottom: 80px;
+          gap: 52px;
+        }
+        .why__right {
+          height: 420px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .why__inner {
+          padding-top: 64px;
+          padding-bottom: 64px;
+        }
+        .why__right {
+          height: 340px;
+        }
+        .testi {
+          padding: 72px 0 80px;
+        }
+        .testi__qmark {
+          font-size: 110px;
+        }
+      }
+
+      /* ─────────────────────────────────────────
+       FOOTER
+    ───────────────────────────────────────── */
+      .site-footer {
+        background: var(--clr-forest);
+        border-top: 1px solid rgba(200, 164, 106, 0.15);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .site-footer::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            ellipse 70% 50% at 80% 0%,
+            rgba(44, 90, 44, 0.22) 0%,
+            transparent 65%
+          ),
+          radial-gradient(
+            ellipse 40% 60% at 5% 100%,
+            rgba(200, 164, 106, 0.06) 0%,
+            transparent 55%
+          );
+        pointer-events: none;
+      }
+
+      /* grain overlay */
+      .site-footer::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+        opacity: 0.5;
+        pointer-events: none;
+      }
+
+      .footer__body {
+        max-width: var(--max-w);
+        margin: 0 auto;
+        padding: 96px var(--pad-x) 72px;
+        display: grid;
+        grid-template-columns: 1.6fr 1fr 1fr 1.2fr;
+        gap: 56px;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Brand column */
+      .footer__brand {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .footer__logo {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        text-decoration: none;
+        margin-bottom: 22px;
+      }
+
+      .footer__logo-mark {
+        width: 42px;
+        height: 42px;
+        flex-shrink: 0;
+      }
+
+      .footer__logo-text {
+        display: flex;
+        flex-direction: column;
+        line-height: 1;
+      }
+
+      .footer__logo-name {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.45rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        color: var(--clr-gold);
+      }
+
+      .footer__logo-tagline {
+        font-family: "Jost", sans-serif;
+        font-size: 0.62rem;
+        font-weight: 400;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--clr-muted);
+        margin-top: 2px;
+      }
+
+      .footer__desc {
+        font-family: "Jost", sans-serif;
+        font-size: 0.92rem;
+        line-height: 1.75;
+        color: rgba(243, 237, 227, 0.52);
+        margin-bottom: 32px;
+        max-width: 310px;
+      }
+
+      .footer__contact-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .footer__contact-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        font-family: "Jost", sans-serif;
+        font-size: 0.88rem;
+        color: rgba(243, 237, 227, 0.55);
+        line-height: 1.5;
+      }
+
+      .footer__contact-icon {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        color: var(--clr-gold);
+        margin-top: 1px;
+      }
+
+      /* Nav columns */
+      .footer__col-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--clr-gold-lt);
+        margin-bottom: 28px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .footer__col-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          rgba(200, 164, 106, 0.35) 0%,
+          transparent 100%
+        );
+      }
+
+      .footer__nav-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .footer__nav-list a {
+        font-family: "Jost", sans-serif;
+        font-size: 0.9rem;
+        color: rgba(243, 237, 227, 0.5);
+        text-decoration: none;
+        letter-spacing: 0.04em;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition:
+          color 0.25s,
+          gap 0.25s;
+      }
+
+      .footer__nav-list a::before {
+        content: "";
+        display: block;
+        width: 14px;
+        height: 1px;
+        background: var(--clr-gold);
+        opacity: 0;
+        transition:
+          opacity 0.25s,
+          width 0.25s;
+        flex-shrink: 0;
+      }
+
+      .footer__nav-list a:hover {
+        color: var(--clr-gold-lt);
+        gap: 12px;
+      }
+
+      .footer__nav-list a:hover::before {
+        opacity: 1;
+      }
+
+      /* Social column */
+      .footer__social-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 0;
+      }
+
+      .footer__social-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        border: 1px solid rgba(200, 164, 106, 0.2);
+        border-radius: 50%;
+        color: rgba(243, 237, 227, 0.5);
+        text-decoration: none;
+        transition:
+          border-color 0.3s,
+          color 0.3s,
+          background 0.3s,
+          transform 0.25s;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .footer__social-link svg {
+        width: 18px;
+        height: 18px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .footer__social-link::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          circle at 50% 50%,
+          rgba(200, 164, 106, 0.18) 0%,
+          transparent 70%
+        );
+        opacity: 0;
+        transition: opacity 0.3s;
+        border-radius: 50%;
+      }
+
+      .footer__social-link:hover {
+        border-color: var(--clr-gold);
+        color: var(--clr-gold);
+        transform: translateY(-3px);
+      }
+
+      .footer__social-link:hover::before {
+        opacity: 1;
+      }
+
+      .footer__social-names {
+        margin-top: 26px;
+        font-family: "Jost", sans-serif;
+        font-size: 0.8rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(243, 237, 227, 0.28);
+        line-height: 2.1;
+      }
+
+      /* Copyright bar */
+      .footer__copy {
+        background: rgba(0, 0, 0, 0.35);
+        border-top: 1px solid rgba(200, 164, 106, 0.08);
+        position: relative;
+        z-index: 1;
+      }
+
+      .footer__copy-inner {
+        max-width: var(--max-w);
+        margin: 0 auto;
+        padding: 22px var(--pad-x);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .footer__copy-text {
+        font-family: "Jost", sans-serif;
+        font-size: 0.8rem;
+        color: rgba(243, 237, 227, 0.32);
+        letter-spacing: 0.04em;
+      }
+
+      .footer__copy-text span {
+        color: var(--clr-gold);
+        font-weight: 500;
+      }
+
+      .footer__legal-links {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .footer__legal-links a {
+        font-family: "Jost", sans-serif;
+        font-size: 0.78rem;
+        color: rgba(243, 237, 227, 0.28);
+        text-decoration: none;
+        letter-spacing: 0.06em;
+        transition: color 0.25s;
+      }
+
+      .footer__legal-links a:hover {
+        color: var(--clr-gold-lt);
+      }
+
+      .footer__legal-links li + li::before {
+        content: "·";
+        margin-right: 24px;
+        color: rgba(243, 237, 227, 0.15);
+      }
+
+      /* Decorative divider line between footer sections and copyright */
+      .footer__divider {
+        max-width: var(--max-w);
+        margin: 0 auto;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(200, 164, 106, 0.2) 30%,
+          rgba(200, 164, 106, 0.2) 70%,
+          transparent 100%
+        );
+      }
+
+      @media (max-width: 1100px) {
+        .footer__body {
+          grid-template-columns: 1fr 1fr;
+          gap: 48px 40px;
+          padding: 72px 40px 56px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .footer__body {
+          grid-template-columns: 1fr;
+          padding: 56px 24px 48px;
+          gap: 40px;
+        }
+        .footer__copy-inner {
+          flex-direction: column;
+          text-align: center;
+          padding: 20px 24px;
+          gap: 12px;
+        }
+        .footer__legal-links {
+          gap: 16px;
+        }
+      }
+      /* ─────────────────────────────────────────
+       LIGHT THEME — SECTION OVERRIDES
+    ───────────────────────────────────────── */
+
+      /* ── Nav: white frosted glass when scrolled on light page ── */
+      .nav.is-scrolled {
+        background: rgba(247, 245, 239, 0.96);
+        backdrop-filter: blur(22px) saturate(1.4);
+        -webkit-backdrop-filter: blur(22px) saturate(1.4);
+        border-bottom-color: rgba(44, 90, 44, 0.1);
+      }
+      .nav.is-scrolled .nav__wordmark {
+        color: var(--clr-forest);
+      }
+      .nav.is-scrolled .nav__links a {
+        color: rgba(26, 46, 26, 0.55);
+      }
+      .nav.is-scrolled .nav__links a:hover,
+      .nav.is-scrolled .nav__links a.is-active {
+        color: var(--clr-forest);
+      }
+      .nav.is-scrolled .nav__burger span {
+        background: var(--clr-forest);
+      }
+
+      /* ─────────────────────────────────────────
+       SCROLL REVEAL
+    ───────────────────────────────────────── */
+      [data-reveal] {
+        opacity: 0;
+        transform: translateY(28px);
+        transition:
+          opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+          transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      [data-reveal].is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      [data-reveal][data-delay="1"] {
+        transition-delay: 0.12s;
+      }
+      [data-reveal][data-delay="2"] {
+        transition-delay: 0.24s;
+      }
+      [data-reveal][data-delay="3"] {
+        transition-delay: 0.36s;
+      }
+
+      /* ─────────────────────────────────────────
+       RESPONSIVE
+    ───────────────────────────────────────── */
+      @media (max-width: 1100px) {
+        :root {
+          --pad-x: 40px;
+        }
+        .hero__inner {
+          gap: 44px;
+        }
+        .about__inner {
+          gap: 52px;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .hero__inner {
+          grid-template-columns: 1fr;
+          padding-top: calc(var(--nav-h) + 28px);
+          gap: 48px;
+        }
+        .hero__right {
+          height: 460px;
+        }
+        .hero__desc {
+          max-width: 100%;
+        }
+        .card--rating {
+          display: none;
+        }
+
+        .about__inner {
+          grid-template-columns: 1fr;
+          padding-top: 80px;
+          padding-bottom: 80px;
+          gap: 52px;
+        }
+        .about__media {
+          height: 460px;
+        }
+        .about__img-wrap,
+        .about__img-border {
+          width: 92%;
+        }
+      }
+
+      @media (max-width: 768px) {
+        :root {
+          --pad-x: 24px;
+        }
+        .nav__links,
+        .nav__cta {
+          display: none;
+        }
+        .nav__burger {
+          display: flex;
+        }
+        .hero__headline {
+          font-size: 42px;
+        }
+        .hero__right {
+          height: 380px;
+        }
+        .stat {
+          padding-right: 22px;
+          margin-right: 22px;
+        }
+        .stat__num {
+          font-size: 34px;
+        }
+        .features__inner {
+          grid-template-columns: 1fr;
+        }
+        .feature {
+          border-right: none;
+          border-bottom: 1px solid rgba(200, 164, 106, 0.1);
+          padding: 24px;
+        }
+        .feature:last-child {
+          border-bottom: none;
+        }
+        .card--pros {
+          left: 0;
+        }
+
+        .about__inner {
+          padding-top: 64px;
+          padding-bottom: 64px;
+        }
+        .about__media {
+          height: 360px;
+        }
+        .about__cards {
+          grid-template-columns: 1fr;
+        }
+        .about__badge {
+          width: 90px;
+          height: 90px;
+          bottom: 50px;
+          right: 6px;
+        }
+        .about__badge-year {
+          font-size: 22px;
+        }
+
+        .trust__logos {
+          gap: 28px;
+        }
+        .trust__divider {
+          display: none;
+        }
+
+        .services {
+          padding: 72px 0 80px;
+        }
+        .services__hd {
+          grid-template-columns: 1fr;
+          gap: 24px;
+          margin-bottom: 48px;
+        }
+        .services__grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .svc {
+          padding: 32px 26px 28px;
+        }
+        .svc::after {
+          font-size: 72px;
+        }
+
+        .gallery {
+          padding: 80px 0 96px;
+        }
+        .gallery__hd {
+          flex-direction: column;
+          align-items: flex-start;
+          margin-bottom: 40px;
+        }
+        .gallery__grid {
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: 260px 220px 220px 280px;
+        }
+        .gal-item:nth-child(1) {
+          grid-column: 1 / 3;
+          grid-row: 1;
+        }
+        .gal-item:nth-child(2) {
+          grid-column: 1;
+          grid-row: 2;
+        }
+        .gal-item:nth-child(3) {
+          grid-column: 2;
+          grid-row: 2;
+        }
+        .gal-item:nth-child(4) {
+          grid-column: 1;
+          grid-row: 3;
+        }
+        .gal-item:nth-child(5) {
+          grid-column: 2;
+          grid-row: 3;
+        }
+        .gal-item:nth-child(6) {
+          grid-column: 1 / 3;
+          grid-row: 4;
+        }
+        .gal-item:nth-child(6) .gal-item__info {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .hero__ctas {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .btn--primary,
+        .btn--outline {
+          width: 100%;
+          justify-content: center;
+        }
+        .about__text {
+          font-size: 14.5px;
+        }
+        .services__grid {
+          grid-template-columns: 1fr;
+        }
+        .gallery__grid {
+          grid-template-columns: 1fr;
+          grid-template-rows: repeat(6, 240px);
+        }
+        .gal-item:nth-child(n) {
+          grid-column: 1;
+        }
+        .gal-item:nth-child(1) {
+          grid-row: 1;
+        }
+        .gal-item:nth-child(2) {
+          grid-row: 2;
+        }
+        .gal-item:nth-child(3) {
+          grid-row: 3;
+        }
+        .gal-item:nth-child(4) {
+          grid-row: 4;
+        }
+        .gal-item:nth-child(5) {
+          grid-row: 5;
+        }
+        .gal-item:nth-child(6) {
+          grid-row: 6;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ═══════════════════════════════════════
+       NAVIGATION
+  ═══════════════════════════════════════ -->
+    <nav class="nav" id="nav" role="navigation" aria-label="Primary navigation">
+      <a href="#" class="nav__logo" aria-label="GardenGlow — Home">
+        <!-- Botanical leaf mark -->
+        <svg
+          class="nav__logo-mark"
+          viewBox="0 0 36 36"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <path
+            d="M18 4C11 4 6 10 6 17c0 4.5 2.2 8.5 5.5 11"
+            stroke="#c8a46a"
+            stroke-width="1.45"
+            stroke-linecap="round"
+          />
+          <path
+            d="M18 4C25 4 30 10 30 17c0 4.5-2.2 8.5-5.5 11"
+            stroke="#c8a46a"
+            stroke-width="1.45"
+            stroke-linecap="round"
+          />
+          <line
+            x1="18"
+            y1="32"
+            x2="18"
+            y2="15"
+            stroke="#2c5a2c"
+            stroke-width="1.45"
+            stroke-linecap="round"
+          />
+          <line
+            x1="18"
+            y1="19"
+            x2="11"
+            y2="12"
+            stroke="#2c5a2c"
+            stroke-width="1.45"
+            stroke-linecap="round"
+          />
+          <line
+            x1="18"
+            y1="23"
+            x2="25"
+            y2="16"
+            stroke="#2c5a2c"
+            stroke-width="1.45"
+            stroke-linecap="round"
+          />
+          <circle cx="18" cy="15.5" r="2.4" fill="#c8a46a" />
+        </svg>
+        <span class="nav__wordmark">Garden<strong>Glow</strong></span>
+      </a>
+
+      <ul class="nav__links" role="list">
+        <li><a href="#" class="is-active">Početna</a></li>
+        <li><a href="#">O nama</a></li>
+        <li><a href="#">Usluge</a></li>
+        <li><a href="#">Projekti</a></li>
+        <li><a href="#">Resursi</a></li>
+      </ul>
+
+      <a href="#contact" class="nav__cta">
+        Kontaktirajte nas
+        <svg
+          width="13"
+          height="13"
+          viewBox="0 0 13 13"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M1 6.5h11M7 1.5l5 5-5 5"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </a>
+
+      <div
+        class="nav__burger"
+        id="burger"
+        role="button"
+        tabindex="0"
+        aria-label="Otvori meni"
+      >
+        <span></span><span></span><span></span>
+      </div>
+    </nav>
+
+    <!-- ═══════════════════════════════════════
+       MOBILE NAVIGATION DRAWER
+  ═══════════════════════════════════════ -->
+    <div
+      class="nav__drawer"
+      id="nav-drawer"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Navigacioni meni"
+    >
+      <nav>
+        <ul class="nav__drawer-list" role="list">
+          <li class="nav__drawer-item" style="--i: 0">
+            <a href="#" class="nav__drawer-link is-active" data-num="01">
+              Početna
+              <svg
+                class="nav__drawer-link-arr"
+                viewBox="0 0 22 22"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M4 11h14M12 5l6 6-6 6"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+          </li>
+          <li class="nav__drawer-item" style="--i: 1">
+            <a href="#about" class="nav__drawer-link" data-num="02">
+              O nama
+              <svg
+                class="nav__drawer-link-arr"
+                viewBox="0 0 22 22"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M4 11h14M12 5l6 6-6 6"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+          </li>
+          <li class="nav__drawer-item" style="--i: 2">
+            <a href="#services" class="nav__drawer-link" data-num="03">
+              Usluge
+              <svg
+                class="nav__drawer-link-arr"
+                viewBox="0 0 22 22"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M4 11h14M12 5l6 6-6 6"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+          </li>
+          <li class="nav__drawer-item" style="--i: 3">
+            <a href="#gallery" class="nav__drawer-link" data-num="04">
+              Projekti
+              <svg
+                class="nav__drawer-link-arr"
+                viewBox="0 0 22 22"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M4 11h14M12 5l6 6-6 6"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+          </li>
+          <li class="nav__drawer-item" style="--i: 4">
+            <a href="#testimonials" class="nav__drawer-link" data-num="05">
+              Preporuke
+              <svg
+                class="nav__drawer-link-arr"
+                viewBox="0 0 22 22"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M4 11h14M12 5l6 6-6 6"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="nav__drawer-sep" style="--i: 5" aria-hidden="true"></div>
+
+      <a href="#contact" class="nav__drawer-cta" style="--i: 6">
+        Zatražite besplatnu ponudu
+        <svg viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path
+            d="M1 7h12M8 2l5 5-5 5"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </a>
+
+      <div class="nav__drawer-foot" style="--i: 7">
+        <span>zdravo@gardenglow.rs</span>
+        <span>+381 11 123 4567</span>
+      </div>
+
+      <!-- Decorative botanical corner -->
+      <svg
+        class="nav__drawer-bota"
+        viewBox="0 0 220 200"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M 5 195 C 15 170 35 145 55 120 C 75 95 98 72 118 50 C 132 34 148 20 160 8"
+          stroke="rgba(92,158,53,0.7)"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+        <path
+          d="M 55 120 C 32 108 10 108 2 120"
+          stroke="rgba(92,158,53,0.5)"
+          stroke-width="1.4"
+          stroke-linecap="round"
+        />
+        <path
+          d="M 98 72 C 118 58 138 52 148 62"
+          stroke="rgba(92,158,53,0.5)"
+          stroke-width="1.4"
+          stroke-linecap="round"
+        />
+        <path
+          d="M 2 120 C -12 105 -14 85 -2 74 C -14 85 -10 108 2 120Z"
+          fill="rgba(44,90,44,0.35)"
+          stroke="rgba(44,90,44,0.65)"
+          stroke-width="1.2"
+        />
+        <path
+          d="M 148 62 C 162 46 168 28 158 18 C 168 28 164 48 148 62Z"
+          fill="rgba(44,90,44,0.35)"
+          stroke="rgba(44,90,44,0.65)"
+          stroke-width="1.2"
+        />
+        <path
+          d="M 60 175 C 45 165 30 164 28 172 C 30 164 45 170 60 175Z"
+          fill="rgba(44,90,44,0.25)"
+          stroke="rgba(44,90,44,0.5)"
+          stroke-width="1"
+        />
+        <path
+          d="M 60 175 C 72 162 82 158 80 167 C 82 158 73 167 60 175Z"
+          fill="rgba(44,90,44,0.25)"
+          stroke="rgba(44,90,44,0.5)"
+          stroke-width="1"
+        />
+        <path
+          d="M 80 145 C 66 135 52 133 50 142 C 52 133 66 140 80 145Z"
+          fill="rgba(44,90,44,0.2)"
+          stroke="rgba(44,90,44,0.45)"
+          stroke-width="0.9"
+        />
+        <path
+          d="M 80 145 C 90 132 100 128 98 138 C 100 128 91 137 80 145Z"
+          fill="rgba(44,90,44,0.2)"
+          stroke="rgba(44,90,44,0.45)"
+          stroke-width="0.9"
+        />
+        <circle
+          cx="160"
+          cy="8"
+          r="5"
+          fill="rgba(92,158,53,0.55)"
+          stroke="rgba(44,90,44,0.75)"
+          stroke-width="1.1"
+        />
+        <circle
+          cx="150"
+          cy="-2"
+          r="3"
+          fill="rgba(92,158,53,0.45)"
+          stroke="rgba(44,90,44,0.6)"
+          stroke-width="0.9"
+        />
+        <circle
+          cx="170"
+          cy="2"
+          r="2.5"
+          fill="rgba(92,158,53,0.45)"
+          stroke="rgba(44,90,44,0.6)"
+          stroke-width="0.9"
+        />
+      </svg>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+       HERO SECTION
+  ═══════════════════════════════════════ -->
+    <section class="hero" aria-label="Naslovna">
+      <!-- Atmospheric background layers -->
+      <div class="hero__bg" aria-hidden="true"></div>
+      <div class="hero__grain" aria-hidden="true"></div>
+      <div class="hero__grid" aria-hidden="true"></div>
+      <div class="hero__ray" aria-hidden="true"></div>
+
+      <!-- Floating leaf particles (JS-generated) -->
+      <div class="hero__particles" id="particles" aria-hidden="true"></div>
+
+      <div class="hero__inner">
+        <!-- ── LEFT COLUMN ── -->
+        <div class="hero__left">
+          <div class="hero__eyebrow" aria-label="Premium usluge uređenja prostora">
+            <div class="hero__eyebrow-dot" aria-hidden="true"></div>
+            <span class="hero__eyebrow-label"
+              >Premium usluge uređenja prostora</span
+            >
+          </div>
+
+          <h1 class="hero__headline">
+            <span class="hl-light">Stvaramo <em class="hl-em">Živa</em></span>
+            <span class="hl-bold">Remek-dela</span>
+            <span class="hl-light">u svakom zelenom prostoru</span>
+          </h1>
+
+          <p class="hero__desc">
+            Transformišemo spoljašnje prostore u izvanredna životna okruženja —
+            od pažljivo održavanih imanja do živahnih komercijalnih zelenih
+            površina koje inspirišu i traju kroz svako godišnje doba.
+          </p>
+
+          <div class="hero__ctas">
+            <a href="#contact" class="btn btn--primary">
+              Zatražite besplatnu ponudu
+              <svg
+                class="btn__arr"
+                viewBox="0 0 15 15"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M1 7.5h13M8 2l5.5 5.5L8 13"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+            <a href="#projects" class="btn btn--outline">
+              Pogledajte naš rad
+              <svg
+                class="btn__arr"
+                viewBox="0 0 15 15"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M1 7.5h13M8 2l5.5 5.5L8 13"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+          </div>
+
+          <div class="hero__stats" role="list">
+            <div class="stat" role="listitem">
+              <span class="stat__num">15+</span>
+              <span class="stat__lbl">Godina iskustva</span>
+            </div>
+            <div class="stat" role="listitem">
+              <span class="stat__num">840</span>
+              <span class="stat__lbl">Završenih projekata</span>
+            </div>
+            <div class="stat" role="listitem">
+              <span class="stat__num">98%</span>
+              <span class="stat__lbl">Zadovoljstvo klijenata</span>
+            </div>
+          </div>
+        </div>
+        <!-- /hero__left -->
+
+        <!-- ── RIGHT COLUMN ── -->
+        <div class="hero__right">
+          <!-- Decorative offset rings -->
+          <div class="hero__ring hero__ring--3" aria-hidden="true"></div>
+          <div class="hero__ring hero__ring--2" aria-hidden="true"></div>
+          <div class="hero__ring" aria-hidden="true"></div>
+
+          <!-- Arch image frame -->
+          <div class="hero__frame">
+            <!--
+            Replace src with your actual hero photo.
+            Recommended: a professional shot of a landscaped garden or a team member at work.
+            Ideal dimensions: ~720×960px, portrait orientation.
+          -->
+            <img
+              src="https://picsum.photos/seed/garden7/720/960"
+              alt="Prelepo uređen vrtni predeo"
+              loading="eager"
+            />
+            <div class="hero__frame-fade" aria-hidden="true"></div>
+          </div>
+
+          <!-- Floating rating card -->
+          <div
+            class="card card--rating"
+            role="img"
+            aria-label="Prosečna ocena 4.9 zvezda"
+          >
+            <div class="stars" aria-hidden="true">
+              <svg viewBox="0 0 12 12">
+                <polygon
+                  points="6,1 7.4,4.4 11,4.8 8.5,7.2 9.2,11 6,9.3 2.8,11 3.5,7.2 1,4.8 4.6,4.4"
+                  fill="#c8a46a"
+                />
+              </svg>
+              <svg viewBox="0 0 12 12">
+                <polygon
+                  points="6,1 7.4,4.4 11,4.8 8.5,7.2 9.2,11 6,9.3 2.8,11 3.5,7.2 1,4.8 4.6,4.4"
+                  fill="#c8a46a"
+                />
+              </svg>
+              <svg viewBox="0 0 12 12">
+                <polygon
+                  points="6,1 7.4,4.4 11,4.8 8.5,7.2 9.2,11 6,9.3 2.8,11 3.5,7.2 1,4.8 4.6,4.4"
+                  fill="#c8a46a"
+                />
+              </svg>
+              <svg viewBox="0 0 12 12">
+                <polygon
+                  points="6,1 7.4,4.4 11,4.8 8.5,7.2 9.2,11 6,9.3 2.8,11 3.5,7.2 1,4.8 4.6,4.4"
+                  fill="#c8a46a"
+                />
+              </svg>
+              <svg viewBox="0 0 12 12">
+                <polygon
+                  points="6,1 7.4,4.4 11,4.8 8.5,7.2 9.2,11 6,9.3 2.8,11 3.5,7.2 1,4.8 4.6,4.4"
+                  fill="#c8a46a"
+                />
+              </svg>
+            </div>
+            <div>
+              <div class="score">4.9</div>
+              <div class="score-lbl">Prosečna ocena</div>
+            </div>
+          </div>
+
+          <!-- Floating professionals card -->
+          <div class="card card--pros">
+            <div class="card__tag">Sertifikovani stručnjaci</div>
+            <div class="card__val">120+</div>
+            <div class="card__sub">Profesionalaca za uređenje</div>
+          </div>
+        </div>
+        <!-- /hero__right -->
+      </div>
+      <!-- /hero__inner -->
+
+      <!-- Scroll indicator -->
+      <div class="hero__scroll" aria-hidden="true">
+        <div class="hero__scroll-bar"></div>
+        <span class="hero__scroll-txt">Skroluj</span>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+       FEATURES STRIP
+  ═══════════════════════════════════════ -->
+    <section class="features" aria-label="Zašto izabrati nas">
+      <div class="features__inner">
+        <div class="feature">
+          <div class="feature__ico">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#c8a46a"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M12 2C8 4 4 8 4 13a8 8 0 0016 0c0-5-4-9-8-11z" />
+              <path d="M12 22v-9" />
+              <path d="M12 16l-3-3M12 16l3-3" />
+            </svg>
+          </div>
+          <div>
+            <div class="feature__title">Stručni krajobrazni dizajneri</div>
+            <div class="feature__desc">
+              Sertifikovani profesionalci sa dubokim hortikulturnim znanjem i
+              kreativnom vizijom.
+            </div>
+          </div>
+        </div>
+
+        <div class="feature">
+          <div class="feature__ico">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#c8a46a"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="5" y="3" width="14" height="18" rx="2" />
+              <path d="M9 3v2h6V3M9 12h6M9 16h4" />
+            </svg>
+          </div>
+          <div>
+            <div class="feature__title">Besplatne konsultacije</div>
+            <div class="feature__desc">
+              Počnite sa besplatnom posečivanjem lokacije i potpuno prilagođenim
+              projektnim predlogom.
+            </div>
+          </div>
+        </div>
+
+        <div class="feature">
+          <div class="feature__ico">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#c8a46a"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M12 2L3 7v6c0 5.2 3.9 9.3 9 10 5.1-.7 9-4.8 9-10V7z" />
+              <path d="M9 12l2 2 4-4" />
+            </svg>
+          </div>
+          <div>
+            <div class="feature__title">Licencirano preduzeće</div>
+            <div class="feature__desc">
+              Potpuno osigurani i sertifikovani, dajući vam potpuni mir uma na
+              svakom projektu.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+       ABOUT SECTION
+  ═══════════════════════════════════════ -->
+    <section class="about" id="about" aria-label="O GardenGlow-u">
+      <div class="about__inner">
+        <!-- ── LEFT: Image composition ── -->
+        <div class="about__media" data-reveal>
+          <!-- Offset border frames -->
+          <div
+            class="about__img-border about__img-border--2"
+            aria-hidden="true"
+          ></div>
+          <div class="about__img-border" aria-hidden="true"></div>
+
+          <!-- Main image -->
+          <div class="about__img-wrap">
+            <!--
+            Replace src with your actual about-section photo.
+            Ideal: a team member or lush greenhouse/garden shot, portrait orientation.
+          -->
+            <img
+              src="https://picsum.photos/seed/greenhouse3/720/900"
+              alt="GardenGlow profesionalac na radu u prelepo uređenom vrtu"
+              loading="lazy"
+            />
+            <div class="about__img-fade" aria-hidden="true"></div>
+          </div>
+
+          <!-- Botanical SVG watermark -->
+          <svg
+            class="about__botanical"
+            viewBox="0 0 120 240"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M60 240 C60 240 60 20 60 0"
+              stroke="#5c9e35"
+              stroke-width="1.2"
+              stroke-dasharray="4 6"
+            />
+            <path
+              d="M60 80 C60 80 30 55 15 30"
+              stroke="#5c9e35"
+              stroke-width="1"
+              stroke-dasharray="3 5"
+            />
+            <path
+              d="M60 80 C60 80 90 55 105 30"
+              stroke="#5c9e35"
+              stroke-width="1"
+              stroke-dasharray="3 5"
+            />
+            <path
+              d="M60 130 C60 130 25 100 8 72"
+              stroke="#5c9e35"
+              stroke-width="1"
+              stroke-dasharray="3 5"
+            />
+            <path
+              d="M60 130 C60 130 95 100 112 72"
+              stroke="#5c9e35"
+              stroke-width="1"
+              stroke-dasharray="3 5"
+            />
+            <path
+              d="M60 180 C60 180 35 155 22 130"
+              stroke="#5c9e35"
+              stroke-width="1"
+              stroke-dasharray="3 5"
+            />
+            <path
+              d="M60 180 C60 180 85 155 98 130"
+              stroke="#5c9e35"
+              stroke-width="1"
+              stroke-dasharray="3 5"
+            />
+            <ellipse
+              cx="15"
+              cy="28"
+              rx="12"
+              ry="18"
+              transform="rotate(-30 15 28)"
+              fill="#5c9e35"
+              opacity=".6"
+            />
+            <ellipse
+              cx="105"
+              cy="28"
+              rx="12"
+              ry="18"
+              transform="rotate(30 105 28)"
+              fill="#5c9e35"
+              opacity=".6"
+            />
+            <ellipse
+              cx="8"
+              cy="70"
+              rx="11"
+              ry="17"
+              transform="rotate(-25 8 70)"
+              fill="#5c9e35"
+              opacity=".5"
+            />
+            <ellipse
+              cx="112"
+              cy="70"
+              rx="11"
+              ry="17"
+              transform="rotate(25 112 70)"
+              fill="#5c9e35"
+              opacity=".5"
+            />
+          </svg>
+
+          <!-- Floating "Est." badge -->
+          <div class="about__badge" aria-label="Osnovano 2009">
+            <span class="about__badge-est">Osn.</span>
+            <span class="about__badge-year">2009</span>
+            <span class="about__badge-lbl">Od</span>
+          </div>
+        </div>
+        <!-- /about__media -->
+
+        <!-- ── RIGHT: Text content ── -->
+        <div class="about__content">
+          <div class="about__eyebrow" data-reveal>
+            <span class="about__eyebrow-line" aria-hidden="true"></span>
+            <span class="about__eyebrow-label">Ko smo mi</span>
+          </div>
+
+          <h2 class="about__heading" data-reveal data-delay="1">
+            Priča iza
+            <strong>izvrsnosti GardenGlow-a u uređenju prostora</strong>
+          </h2>
+
+          <p class="about__text" data-reveal data-delay="2">
+            Više od 15 godina, GardenGlow transformiše obične spoljašnje prostore
+            u živa umetnička dela. Naš multidisciplinarni tim hortikultivista,
+            dizajnera i stručnjaka za održavanje sarađuje na isporuci rezultata
+            koji su i trajni i lepi — od privatnih imanja do velikih komercijalnih
+            zelenih površina.
+          </p>
+
+          <!-- Vision + Mission cards -->
+          <div class="about__cards" data-reveal data-delay="2">
+            <div class="about__card">
+              <svg
+                class="about__card-ico"
+                viewBox="0 0 32 32"
+                fill="none"
+                aria-hidden="true"
+              >
+                <circle
+                  cx="16"
+                  cy="16"
+                  r="13"
+                  stroke="#c8a46a"
+                  stroke-width="1.4"
+                />
+                <path
+                  d="M16 9 C13 11 11 14 12 17 C13 20 16 22 16 22 C16 22 19 20 20 17 C21 14 19 11 16 9Z"
+                  fill="rgba(200,164,106,.25)"
+                  stroke="#c8a46a"
+                  stroke-width="1.2"
+                />
+                <circle cx="16" cy="16" r="2.5" fill="#c8a46a" />
+              </svg>
+              <div class="about__card-title">Naša vizija</div>
+              <p class="about__card-text">
+                Da budemo najpouzdanije ime u izvrsnosti krajobraznog dizajna —
+                stvarajući zelene prostore koji poboljšavaju dobrobit i
+                izdržavaju test vremena.
+              </p>
+            </div>
+
+            <div class="about__card about__card--mission">
+              <svg
+                class="about__card-ico"
+                viewBox="0 0 32 32"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M16 3 C10 5 6 10 6 16 C6 22 10 27 16 29 C22 27 26 22 26 16 C26 10 22 5 16 3Z"
+                  stroke="#5c9e35"
+                  stroke-width="1.4"
+                />
+                <path
+                  d="M16 3 C16 3 16 29 16 29"
+                  stroke="#5c9e35"
+                  stroke-width="1"
+                  stroke-dasharray="3 4"
+                />
+                <path
+                  d="M16 12 C16 12 11 9 9 7"
+                  stroke="#5c9e35"
+                  stroke-width="1.1"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M16 12 C16 12 21 9 23 7"
+                  stroke="#5c9e35"
+                  stroke-width="1.1"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M16 20 C16 20 12 17 10 15"
+                  stroke="#5c9e35"
+                  stroke-width="1.1"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M16 20 C16 20 20 17 22 15"
+                  stroke="#5c9e35"
+                  stroke-width="1.1"
+                  stroke-linecap="round"
+                />
+              </svg>
+              <div class="about__card-title">Naša misija</div>
+              <p class="about__card-text">
+                Da isporučimo održiva, inovativna rešenja uređenja prostora sa
+                nenadmašnim zanatskim umećem — nadmašujući očekivanja klijenata
+                na svakom projektu.
+              </p>
+            </div>
+          </div>
+          <!-- /about__cards -->
+
+          <a href="#" class="about__link" data-reveal data-delay="3">
+            Otkrijte našu punu priču
+            <svg viewBox="0 0 15 15" fill="none" aria-hidden="true">
+              <path
+                d="M1 7.5h13M8 2l5.5 5.5L8 13"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </a>
+        </div>
+        <!-- /about__content -->
+      </div>
+      <!-- /about__inner -->
+    </section>
+
+    <!-- ═══════════════════════════════════════
+       TRUST / LOGOS STRIP
+  ═══════════════════════════════════════ -->
+    <section class="trust" aria-label="Poverenje vodećih organizacija">
+      <div class="trust__inner">
+        <p class="trust__heading" data-reveal>
+          Veruju nam <strong>25.000+ svetski poznatih brendova</strong><br />
+          i organizacija svih veličina
+        </p>
+
+        <div class="trust__logos" data-reveal data-delay="1">
+          <div class="trust__logo" title="Accufirm">
+            <span class="tl tl--sans"
+              >Accu<span style="color: var(--clr-gold-lt)">firm</span></span
+            >
+          </div>
+
+          <div class="trust__divider" aria-hidden="true"></div>
+
+          <div class="trust__logo" title="Bloomly">
+            <span class="tl tl--italic">Bloomly</span>
+          </div>
+
+          <div class="trust__divider" aria-hidden="true"></div>
+
+          <div class="trust__logo" title="Brighto">
+            <span class="tl tl--sans tl--dot">BRIGHTO</span>
+          </div>
+
+          <div class="trust__divider" aria-hidden="true"></div>
+
+          <div class="trust__logo" title="Digancy">
+            <span class="tl"
+              >Di<em style="font-style: italic; color: var(--clr-gold)"
+                >gancy</em
+              ></span
+            >
+          </div>
+
+          <div class="trust__divider" aria-hidden="true"></div>
+
+          <div class="trust__logo" title="EcoScape">
+            <!-- Small leaf icon + text -->
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 13 13"
+              fill="none"
+              style="opacity: 0.8"
+            >
+              <path
+                d="M6.5 1 C4 3 2 6 3 9 C4 11 6.5 12 6.5 12 C6.5 12 9 11 10 9 C11 6 9 3 6.5 1Z"
+                fill="#5c9e35"
+              />
+            </svg>
+            <span class="tl tl--sans" style="letter-spacing: 0.08em"
+              >EcoScape</span
+            >
+          </div>
+
+          <div class="trust__divider" aria-hidden="true"></div>
+
+          <div class="trust__logo" title="Fennious">
+            <span class="tl" style="font-weight: 300; letter-spacing: 0.08em"
+              >Fennious</span
+            >
+          </div>
+
+          <div class="trust__divider" aria-hidden="true"></div>
+
+          <div class="trust__logo" title="Lineco">
+            <span class="tl tl--sans tl--dot">LINECO</span>
+          </div>
+
+          <div class="trust__divider" aria-hidden="true"></div>
+
+          <div class="trust__logo" title="keyGenie">
+            <span class="tl tl--italic"
+              >key<strong style="font-style: normal; font-weight: 600"
+                >Genie</strong
+              ></span
+            >
+          </div>
+        </div>
+        <!-- /trust__logos -->
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+       OUR SERVICES
+  ═══════════════════════════════════════ -->
+    <section class="services" id="services" aria-label="Naše usluge">
+      <div class="services__bg-orb" aria-hidden="true"></div>
+
+      <div class="services__inner">
+        <!-- Header -->
+        <div class="services__hd" data-reveal>
+          <div class="services__hd-left">
+            <div class="services__eyebrow">
+              <span class="services__eyebrow-line" aria-hidden="true"></span>
+              <span class="services__eyebrow-label">Šta radimo</span>
+            </div>
+            <h2 class="services__heading">
+              Naše
+              <strong>Usluge</strong>
+            </h2>
+          </div>
+
+          <div class="services__hd-right">
+            <p class="services__sub">
+              Od besprekorne nege travnjaka do posebnih vodenih instalacija, naš
+              kompletan spektar usluga drži svaki zeleni prostor u apsolutno
+              najboljoj formi — svake sezone, svake godine.
+            </p>
+            <a href="#" class="services__all">
+              Pogledajte sve usluge
+              <svg viewBox="0 0 13 13" fill="none" aria-hidden="true">
+                <path
+                  d="M1 6.5h11M7 1.5l5 5-5 5"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+        <!-- /services__hd -->
+
+        <!-- 3 × 2 Services grid -->
+        <div class="services__grid" data-reveal data-delay="1">
+          <!-- 1 — Yard Maintenance & Cleanup -->
+          <div class="svc" data-num="01">
+            <div class="svc__ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <!-- Rake head + handle -->
+                <path d="M4 7h16M5 7v3M8 7v3M11 7v3M14 7v3M17 7v3M11 10v7" />
+                <path d="M8 17h6" />
+              </svg>
+            </div>
+            <div class="svc__name">Održavanje dvorišta i čišćenje</div>
+            <p class="svc__desc">
+              Redovno košenje, podrezivanje ivica, uklanjanje otpada i sezonsko
+              čišćenje koji drže vašu imovinu besprekorno tokom cele godine.
+            </p>
+            <a href="#" class="svc__more">
+              Saznajte više
+              <svg viewBox="0 0 13 13" fill="none">
+                <path
+                  d="M1 6.5h11M7 1.5l5 5-5 5"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+          </div>
+
+          <!-- 2 — Patios -->
+          <div class="svc" data-num="02">
+            <div class="svc__ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <!-- Paving tile grid -->
+                <rect x="3" y="3" width="8" height="8" rx=".5" />
+                <rect x="13" y="3" width="8" height="8" rx=".5" />
+                <rect x="3" y="13" width="8" height="8" rx=".5" />
+                <rect x="13" y="13" width="8" height="8" rx=".5" />
+              </svg>
+            </div>
+            <div class="svc__name">Terase</div>
+            <p class="svc__desc">
+              Prilagođeno dizajnirani spoljašnji životni prostori izrađeni od
+              vrhunskih materijala — prilagođeni vašem načinu života i estetskoj
+              viziji.
+            </p>
+            <a href="#" class="svc__more">
+              Saznajte više
+              <svg viewBox="0 0 13 13" fill="none">
+                <path
+                  d="M1 6.5h11M7 1.5l5 5-5 5"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+          </div>
+
+          <!-- 3 — Irrigation System -->
+          <div class="svc" data-num="03">
+            <div class="svc__ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <!-- Spray nozzle + drops -->
+                <path d="M3 18 L10 11 L14 15 L7 22Z" />
+                <path
+                  d="M10 11 L14 7 C16 5 19 5 21 7 C23 9 23 12 21 14 L17 18"
+                />
+                <circle
+                  cx="16"
+                  cy="4"
+                  r="1"
+                  fill="currentColor"
+                  stroke="none"
+                />
+                <circle
+                  cx="20"
+                  cy="3"
+                  r="1"
+                  fill="currentColor"
+                  stroke="none"
+                />
+                <circle
+                  cx="21"
+                  cy="7"
+                  r="1"
+                  fill="currentColor"
+                  stroke="none"
+                />
+              </svg>
+            </div>
+            <div class="svc__name">Sistem za navodnjavanje</div>
+            <p class="svc__desc">
+              Sistemi za precizno upravljanje vodom koji održavaju zdrav travnjak
+              uz uštedu vode i značajno smanjenje troškova.
+            </p>
+            <a href="#" class="svc__more">
+              Saznajte više
+              <svg viewBox="0 0 13 13" fill="none">
+                <path
+                  d="M1 6.5h11M7 1.5l5 5-5 5"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+          </div>
+
+          <!-- 4 — Water Features -->
+          <div class="svc" data-num="04">
+            <div class="svc__ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <!-- Water drop + ripple rings -->
+                <path
+                  d="M12 3 C12 3 6 10 6 14 C6 17.3 8.7 20 12 20 C15.3 20 18 17.3 18 14 C18 10 12 3 12 3Z"
+                />
+                <path
+                  d="M5 22 C5 22 8 20.5 12 20.5 C16 20.5 19 22 19 22"
+                  opacity=".35"
+                />
+              </svg>
+            </div>
+            <div class="svc__name">Vodene instalacije</div>
+            <p class="svc__desc">
+              Posebno dizajnirani ribnjaci, fontane i vodeni zidovi koji donose
+              mir i dramatičnu vizuelnu dubinu svakom spoljašnjem okruženju.
+            </p>
+            <a href="#" class="svc__more">
+              Saznajte više
+              <svg viewBox="0 0 13 13" fill="none">
+                <path
+                  d="M1 6.5h11M7 1.5l5 5-5 5"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+          </div>
+
+          <!-- 5 — Weeding -->
+          <div class="svc" data-num="05">
+            <div class="svc__ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <!-- Scissors -->
+                <circle cx="6" cy="6" r="3" />
+                <circle cx="6" cy="18" r="3" />
+                <path d="M8.5 8.5 L20 20" />
+                <path d="M8.5 15.5 L20 4" />
+                <path d="M14 14 L20 20" />
+              </svg>
+            </div>
+            <div class="svc__name">Uklanjanje korova</div>
+            <p class="svc__desc">
+              Temeljno uklanjanje invazivnih biljaka — ručno i ciljano — da
+              zaštitite i obnovite prirodnu lepotu vašeg vrta.
+            </p>
+            <a href="#" class="svc__more">
+              Saznajte više
+              <svg viewBox="0 0 13 13" fill="none">
+                <path
+                  d="M1 6.5h11M7 1.5l5 5-5 5"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+          </div>
+
+          <!-- 6 — Prevention -->
+          <div class="svc" data-num="06">
+            <div class="svc__ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <!-- Shield + check -->
+                <path
+                  d="M12 2 L4 5.5 L4 12 C4 16.4 7.5 20.5 12 22 C16.5 20.5 20 16.4 20 12 L20 5.5 Z"
+                />
+                <path d="M9 12 L11 14 L15 10" />
+              </svg>
+            </div>
+            <div class="svc__name">Prevencija</div>
+            <p class="svc__desc">
+              Proaktivni tretmani zemljišta i programi zdravlja biljaka koji
+              brane od štetočina, bolesti i sezonskih ekoloških oštećenja.
+            </p>
+            <a href="#" class="svc__more">
+              Saznajte više
+              <svg viewBox="0 0 13 13" fill="none">
+                <path
+                  d="M1 6.5h11M7 1.5l5 5-5 5"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+        <!-- /services__grid -->
+      </div>
+      <!-- /services__inner -->
+    </section>
+
+    <!-- ═══════════════════════════════════════
+       GALLERY / OUR WORK
+  ═══════════════════════════════════════ -->
+    <section class="gallery" id="projects" aria-label="Galerija projekata">
+      <div class="gallery__orb" aria-hidden="true"></div>
+
+      <div class="gallery__inner">
+        <!-- Header row -->
+        <div class="gallery__hd" data-reveal>
+          <div>
+            <div class="gallery__eyebrow">
+              <span class="gallery__eyebrow-line" aria-hidden="true"></span>
+              <span class="gallery__eyebrow-label">Naš portfolio</span>
+            </div>
+            <h2 class="gallery__heading">
+              Odabrani
+              <strong>Projekti</strong>
+            </h2>
+          </div>
+
+          <!-- Category filter -->
+          <div
+            class="gallery__filter"
+            role="group"
+            aria-label="Filtriraj projekte po kategoriji"
+          >
+            <button class="gal-btn is-active" data-filter="all">Svi</button>
+            <button class="gal-btn" data-filter="residential">
+              Stambeni
+            </button>
+            <button class="gal-btn" data-filter="commercial">Komercijalni</button>
+            <button class="gal-btn" data-filter="water">
+              Voda i terase
+            </button>
+          </div>
+        </div>
+        <!-- /gallery__hd -->
+
+        <!-- Photo grid -->
+        <div class="gallery__grid" data-reveal data-delay="1">
+          <!-- 1 — Tall left feature -->
+          <div class="gal-item" data-cat="residential">
+            <!--
+            Replace src with a real project photo.
+            This slot is the HERO of the gallery — use your best shot.
+            Ideal: ~800×900px, portrait landscape scene.
+          -->
+            <img
+              src="https://picsum.photos/seed/patio1/800/900"
+              alt="Vrt stambenog imanja sa elegantnom terasom i vatromnom instalacijom"
+              loading="lazy"
+            />
+            <div class="gal-item__veil" aria-hidden="true"></div>
+            <div class="gal-item__info">
+              <div class="gal-item__cat">Stambeno imanje</div>
+              <div class="gal-item__title">
+                Terasa pored jezera i<br />vatromna instalacija
+              </div>
+              <a href="#" class="gal-item__view">
+                Pogledaj projekat
+                <svg viewBox="0 0 11 11" fill="none" aria-hidden="true">
+                  <path
+                    d="M1 5.5h9M6 1.5l4 4-4 4"
+                    stroke="currentColor"
+                    stroke-width="1.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- 2 — Top centre -->
+          <div class="gal-item" data-cat="residential">
+            <img
+              src="https://picsum.photos/seed/japanGarden/600/500"
+              alt="Pažljivo uređen japanski vrt"
+              loading="lazy"
+            />
+            <div class="gal-item__veil" aria-hidden="true"></div>
+            <div class="gal-item__info">
+              <div class="gal-item__cat">Stambeni</div>
+              <div class="gal-item__title">Japanski nasleđeni vrt</div>
+              <a href="#" class="gal-item__view">
+                Pogledaj projekat
+                <svg viewBox="0 0 11 11" fill="none" aria-hidden="true">
+                  <path
+                    d="M1 5.5h9M6 1.5l4 4-4 4"
+                    stroke="currentColor"
+                    stroke-width="1.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- 3 — Top right -->
+          <div class="gal-item" data-cat="water">
+            <img
+              src="https://picsum.photos/seed/pondBridge/600/500"
+              alt="Ukrasni vrtni most nad naturalističkim ribnjačom"
+              loading="lazy"
+            />
+            <div class="gal-item__veil" aria-hidden="true"></div>
+            <div class="gal-item__info">
+              <div class="gal-item__cat">Vodena instalacija</div>
+              <div class="gal-item__title">Ukrasni ribnjak i most</div>
+              <a href="#" class="gal-item__view">
+                Pogledaj projekat
+                <svg viewBox="0 0 11 11" fill="none" aria-hidden="true">
+                  <path
+                    d="M1 5.5h9M6 1.5l4 4-4 4"
+                    stroke="currentColor"
+                    stroke-width="1.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- 4 — Middle centre -->
+          <div class="gal-item" data-cat="residential">
+            <img
+              src="https://picsum.photos/seed/flowerGarden/600/500"
+              alt="Živahni seosk cvjetni vrt u punom cvatu"
+              loading="lazy"
+            />
+            <div class="gal-item__veil" aria-hidden="true"></div>
+            <div class="gal-item__info">
+              <div class="gal-item__cat">Stambeni</div>
+              <div class="gal-item__title">Seoski cvjetni dizajn</div>
+              <a href="#" class="gal-item__view">
+                Pogledaj projekat
+                <svg viewBox="0 0 11 11" fill="none" aria-hidden="true">
+                  <path
+                    d="M1 5.5h9M6 1.5l4 4-4 4"
+                    stroke="currentColor"
+                    stroke-width="1.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- 5 — Middle right -->
+          <div class="gal-item" data-cat="water">
+            <img
+              src="https://picsum.photos/seed/modernPool/600/500"
+              alt="Savremeno uređenje prostora sa geometrijskim vodenim elementom"
+              loading="lazy"
+            />
+            <div class="gal-item__veil" aria-hidden="true"></div>
+            <div class="gal-item__info">
+              <div class="gal-item__cat">Voda i terase</div>
+              <div class="gal-item__title">Moderni odražavajući bazen</div>
+              <a href="#" class="gal-item__view">
+                Pogledaj projekat
+                <svg viewBox="0 0 11 11" fill="none" aria-hidden="true">
+                  <path
+                    d="M1 5.5h9M6 1.5l4 4-4 4"
+                    stroke="currentColor"
+                    stroke-width="1.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- 6 — Full-width bottom strip -->
+          <div class="gal-item" data-cat="commercial">
+            <img
+              src="https://picsum.photos/seed/nightGarden/1400/620"
+              alt="Profesionalno osvetljeni večernji vrt sa ambijentalnim dizajnom rasvete"
+              loading="lazy"
+            />
+            <div class="gal-item__veil" aria-hidden="true"></div>
+            <div class="gal-item__info">
+              <div>
+                <div class="gal-item__cat">Komercijalno imanje</div>
+                <div class="gal-item__title">
+                  Večernja rasveta i krajobrazni dizajn
+                </div>
+              </div>
+              <a href="#" class="gal-item__view">
+                Pogledaj projekat
+                <svg viewBox="0 0 11 11" fill="none" aria-hidden="true">
+                  <path
+                    d="M1 5.5h9M6 1.5l4 4-4 4"
+                    stroke="currentColor"
+                    stroke-width="1.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- /gallery__grid -->
+
+        <!-- Footer row -->
+        <div class="gallery__footer" data-reveal data-delay="2">
+          <p class="gallery__count">
+            Prikazuje se <strong>6</strong> od <strong>48</strong> završenih projekata
+          </p>
+          <a href="#" class="btn btn--outline" style="padding: 14px 36px">
+            Pogledajte sve projekte
+            <svg
+              class="btn__arr"
+              viewBox="0 0 15 15"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M1 7.5h13M8 2l5.5 5.5L8 13"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </a>
+        </div>
+      </div>
+      <!-- /gallery__inner -->
+    </section>
+
+    <!-- ═══════════════════════════════════════
+       WHY CHOOSE US
+  ═══════════════════════════════════════ -->
+    <section class="why" id="why" aria-label="Zašto izabrati GardenGlow">
+      <div class="why__inner">
+        <!-- ── Left: reasons ── -->
+        <div class="why__left">
+          <div class="why__eyebrow" data-reveal>
+            <span class="why__eyebrow-line" aria-hidden="true"></span>
+            <span class="why__eyebrow-label">Zašto izabrati nas</span>
+          </div>
+
+          <h2 class="why__heading" data-reveal data-delay="1">
+            Zašto izabrati
+            <strong>GardenGlow</strong>
+          </h2>
+
+          <p class="why__intro" data-reveal data-delay="1">
+            Kombinujemo hortikulturnu stručnost sa iskrenom strašću prema
+            prirodnom svetu — isporučujući predele koji su jednako trajni
+            koliko i izvanredni.
+          </p>
+
+          <ul class="why__list" data-reveal data-delay="2">
+            <li class="why__item">
+              <div class="why__item-ico" aria-hidden="true">
+                <svg viewBox="0 0 19 19">
+                  <circle cx="9.5" cy="9.5" r="7.5" />
+                  <path d="M6 9.5l2.5 2.5 5-5" />
+                </svg>
+              </div>
+              <div class="why__item-body">
+                <div class="why__item-title">15+ godina stručnosti</div>
+                <p class="why__item-desc">
+                  Dokazano iskustvo transformisanja imanja i komercijalnih
+                  prostora širom regije od 2009. godine.
+                </p>
+              </div>
+            </li>
+
+            <li class="why__item">
+              <div class="why__item-ico" aria-hidden="true">
+                <svg viewBox="0 0 19 19">
+                  <path
+                    d="M9.5 2 C6 4 3 7 3 10 C3 14 6 17 9.5 18 C13 17 16 14 16 10 C16 7 13 4 9.5 2Z"
+                  />
+                  <path
+                    d="M9.5 2 L9.5 18M6 6 C7.5 7 9.5 7 11 6M6 13 C7.5 12 9.5 12 11 13"
+                  />
+                </svg>
+              </div>
+              <div class="why__item-body">
+                <div class="why__item-title">Ekološke prakse</div>
+                <p class="why__item-desc">
+                  Koristimo održive materijale, organske tretmane i pametne
+                  vodne sisteme da zaštitimo vaš lokalni ekosistem.
+                </p>
+              </div>
+            </li>
+
+            <li class="why__item">
+              <div class="why__item-ico" aria-hidden="true">
+                <svg viewBox="0 0 19 19">
+                  <path
+                    d="M9.5 1.5 L3 4.5 L3 9 C3 13 5.8 16.7 9.5 18 C13.2 16.7 16 13 16 9 L16 4.5 Z"
+                  />
+                  <path d="M6.5 9.5 L8.5 11.5 L12.5 7.5" />
+                </svg>
+              </div>
+              <div class="why__item-body">
+                <div class="why__item-title">Zadovoljstvo zagarantovano</div>
+                <p class="why__item-desc">
+                  Stojimo iza svakog projekta. Ako nešto nije u redu, vraćamo
+                  se i ispravljamo — bez dodatnih troškova.
+                </p>
+              </div>
+            </li>
+
+            <li class="why__item">
+              <div class="why__item-ico" aria-hidden="true">
+                <svg viewBox="0 0 19 19">
+                  <polygon
+                    points="9.5,1.5 12,7 18,7.5 13.5,11.5 15,17.5 9.5,14.5 4,17.5 5.5,11.5 1,7.5 7,7"
+                  />
+                </svg>
+              </div>
+              <div class="why__item-body">
+                <div class="why__item-title">Nagrađivani dizajn</div>
+                <p class="why__item-desc">
+                  Prepoznati od strane Nacionalnog udruženja za uređenje prostora
+                  za izvrsnost u dizajnu tri uzastopne godine.
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <!-- /why__left -->
+
+        <!-- ── Right: image ── -->
+        <div class="why__right" data-reveal data-delay="1">
+          <div class="why__img-ring" aria-hidden="true"></div>
+
+          <div class="why__img-wrap">
+            <!--
+            Replace src with a real team/work photo.
+            Ideal: landscaper actively working on a project — portrait orientation.
+          -->
+            <img
+              src="https://picsum.photos/seed/gardener2/720/900"
+              alt="GardenGlow krajobrazni profesionalac na radu u vrtu"
+              loading="lazy"
+            />
+            <div class="why__img-overlay" aria-hidden="true"></div>
+          </div>
+
+          <!-- Floating award card -->
+          <div
+            class="why__award"
+            aria-label="Nagrađivana kompanija za uređenje prostora"
+          >
+            <div class="why__award-ico">
+              <svg viewBox="0 0 20 20">
+                <polygon
+                  points="10,1.5 12.5,7.5 19,8 14.5,12.5 16,19 10,15.5 4,19 5.5,12.5 1,8 7.5,7.5"
+                />
+              </svg>
+            </div>
+            <div>
+              <div class="why__award-title">
+                Najbolji uređivač 2024<br />Nacionalna nagrada
+              </div>
+              <div class="why__award-sub">
+                Udruženje za izvrsnost u krajobraznom dizajnu
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /why__right -->
+      </div>
+      <!-- /why__inner -->
+    </section>
+
+    <!-- ═══════════════════════════════════════
+       TESTIMONIAL SLIDER
+  ═══════════════════════════════════════ -->
+    <section class="testi" id="testimonials" aria-label="Preporuke klijenata">
+      <div class="testi__inner">
+        <span class="testi__qmark" aria-hidden="true">"</span>
+
+        <div class="testi__stars" aria-label="5 od 5 zvezda" data-reveal>
+          <svg viewBox="0 0 18 18">
+            <polygon
+              points="9,1 11.5,6.5 17.5,7 13,11.5 14.5,17.5 9,14.5 3.5,17.5 5,11.5 0.5,7 6.5,6.5"
+              fill="#c8a46a"
+            />
+          </svg>
+          <svg viewBox="0 0 18 18">
+            <polygon
+              points="9,1 11.5,6.5 17.5,7 13,11.5 14.5,17.5 9,14.5 3.5,17.5 5,11.5 0.5,7 6.5,6.5"
+              fill="#c8a46a"
+            />
+          </svg>
+          <svg viewBox="0 0 18 18">
+            <polygon
+              points="9,1 11.5,6.5 17.5,7 13,11.5 14.5,17.5 9,14.5 3.5,17.5 5,11.5 0.5,7 6.5,6.5"
+              fill="#c8a46a"
+            />
+          </svg>
+          <svg viewBox="0 0 18 18">
+            <polygon
+              points="9,1 11.5,6.5 17.5,7 13,11.5 14.5,17.5 9,14.5 3.5,17.5 5,11.5 0.5,7 6.5,6.5"
+              fill="#c8a46a"
+            />
+          </svg>
+          <svg viewBox="0 0 18 18">
+            <polygon
+              points="9,1 11.5,6.5 17.5,7 13,11.5 14.5,17.5 9,14.5 3.5,17.5 5,11.5 0.5,7 6.5,6.5"
+              fill="#c8a46a"
+            />
+          </svg>
+        </div>
+
+        <!-- Slides -->
+        <div class="testi__track" data-reveal data-delay="1">
+          <div
+            class="testi__slide is-active"
+            role="region"
+            aria-label="Preporuka 1 od 3"
+          >
+            <p class="testi__quote">
+              „GardenGlow je u potpunosti transformisao naš zadnji vrt u nešto
+              što smo videli samo u časopisima. Pažnja na detalje — izbor
+              biljaka, osvetljenje, navodnjavanje — bila je zaista izuzetna.
+              Svake nedelje dobijamo komplimente od komšija."
+            </p>
+            <div class="testi__client">
+              <div class="testi__avatar" aria-hidden="true">S</div>
+              <div class="testi__name">Sofija Hartman</div>
+              <div class="testi__role">Vlasnik kuće, privatno imanje</div>
+            </div>
+          </div>
+
+          <div
+            class="testi__slide"
+            role="region"
+            aria-label="Preporuka 2 od 3"
+          >
+            <p class="testi__quote">
+              „Kao developer komercijalnih nekretnina, kvalitet uređenja direktno
+              utiče na dobrobit naših stanara i prestiž naše zgrade. Tim
+              GardenGlow-a je ispunio sve — na vreme, u okviru budžeta, i daleko
+              iznad naših očekivanja. Nećemo koristiti nikog drugog."
+            </p>
+            <div class="testi__client">
+              <div class="testi__avatar" aria-hidden="true">M</div>
+              <div class="testi__name">Marko Velden</div>
+              <div class="testi__role">Direktor, Velden Property Group</div>
+            </div>
+          </div>
+
+          <div
+            class="testi__slide"
+            role="region"
+            aria-label="Preporuka 3 od 3"
+          >
+            <p class="testi__quote">
+              „Tim je redizajnirao ceo spoljašnji zeleni prostor našeg hotela —
+              bazeni, staze, baštenski terasi. Rezultat je zapanjujući. Naši
+              gosti sada redovno pominju prostore u recenzijama. GardenGlow nije
+              samo poboljšao naše imanje — podigao je celokupno iskustvo gostiju."
+            </p>
+            <div class="testi__client">
+              <div class="testi__avatar" aria-hidden="true">L</div>
+              <div class="testi__name">Léa Fontaine</div>
+              <div class="testi__role">Generalni menadžer, Hotel Verdant</div>
+            </div>
+          </div>
+        </div>
+        <!-- /testi__track -->
+
+        <!-- Controls -->
+        <div class="testi__controls" data-reveal data-delay="2">
+          <button
+            class="testi__arrow"
+            id="testi-prev"
+            aria-label="Prethodna preporuka"
+          >
+            <svg viewBox="0 0 14 14" fill="none">
+              <path
+                d="M9 2L4 7l5 5"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+
+          <div
+            class="testi__dots"
+            role="tablist"
+            aria-label="Navigacija preporuka"
+          >
+            <button
+              class="testi__dot is-active"
+              data-idx="0"
+              role="tab"
+              aria-selected="true"
+              aria-label="Preporuka 1"
+            ></button>
+            <button
+              class="testi__dot"
+              data-idx="1"
+              role="tab"
+              aria-selected="false"
+              aria-label="Preporuka 2"
+            ></button>
+            <button
+              class="testi__dot"
+              data-idx="2"
+              role="tab"
+              aria-selected="false"
+              aria-label="Preporuka 3"
+            ></button>
+          </div>
+
+          <button
+            class="testi__arrow"
+            id="testi-next"
+            aria-label="Sledeća preporuka"
+          >
+            <svg viewBox="0 0 14 14" fill="none">
+              <path
+                d="M5 2l5 5-5 5"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <!-- /testi__inner -->
+    </section>
+
+    <!-- ═══════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════ -->
+    <footer class="site-footer">
+      <div class="footer__body">
+        <!-- ── Brand Column ── -->
+        <div class="footer__brand" data-reveal>
+          <a href="#" class="footer__logo" aria-label="GardenGlow Početna">
+            <!-- Logo mark: stylised leaf / G letterform -->
+            <svg
+              class="footer__logo-mark"
+              viewBox="0 0 42 42"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <circle cx="21" cy="21" r="20.5" stroke="rgba(200,164,106,.3)" />
+              <path
+                d="M21 8C21 8 10 14.5 10 23C10 28.523 14.477 33 21 33C27.523 33 32 28.523 32 23C32 17.477 27.523 12.954 21 8Z"
+                fill="rgba(44,90,44,.6)"
+              />
+              <path
+                d="M21 8C21 8 32 14.5 32 23"
+                stroke="#c8a46a"
+                stroke-width="1.2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M21 15V33"
+                stroke="#c8a46a"
+                stroke-width="1"
+                stroke-linecap="round"
+                stroke-dasharray="2 2.5"
+              />
+            </svg>
+            <span class="footer__logo-text">
+              <span class="footer__logo-name">GardenGlow</span>
+              <span class="footer__logo-tagline"
+                >Uređenje i zelena nega</span
+              >
+            </span>
+          </a>
+
+          <p class="footer__desc">
+            Stvaramo izvanredna spoljna okruženja koja traju kroz godišnja doba.
+            Od posebnog vrtnog dizajna do stalnog održavanja, pretvaramo vašu
+            viziju u stvarnost.
+          </p>
+
+          <ul class="footer__contact-list">
+            <li class="footer__contact-item">
+              <!-- Pin icon -->
+              <svg
+                class="footer__contact-icon"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M8 1C5.51 1 3.5 3.01 3.5 5.5C3.5 8.75 8 15 8 15C8 15 12.5 8.75 12.5 5.5C12.5 3.01 10.49 1 8 1ZM8 7.5C6.9 7.5 6 6.6 6 5.5C6 4.4 6.9 3.5 8 3.5C9.1 3.5 10 4.4 10 5.5C10 6.6 9.1 7.5 8 7.5Z"
+                  fill="currentColor"
+                />
+              </svg>
+              14 Verdant Lane, Beograd<br />Srbija, 11000
+            </li>
+            <li class="footer__contact-item">
+              <!-- Phone icon -->
+              <svg
+                class="footer__contact-icon"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M3.1 1H6.3L7.8 4.8L5.95 5.95C6.85 7.75 8.25 9.15 10.05 10.05L11.2 8.2L15 9.7V12.9C15 14.05 14.05 15 12.9 15C6.3 15 1 9.7 1 3.1C1 1.95 1.95 1 3.1 1Z"
+                  stroke="currentColor"
+                  stroke-width="1.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              +381 11 123 4567
+            </li>
+            <li class="footer__contact-item">
+              <!-- Mail icon -->
+              <svg
+                class="footer__contact-icon"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <rect
+                  x="1"
+                  y="3"
+                  width="14"
+                  height="10"
+                  rx="1.5"
+                  stroke="currentColor"
+                  stroke-width="1.2"
+                />
+                <path
+                  d="M1 4.5L8 9.5L15 4.5"
+                  stroke="currentColor"
+                  stroke-width="1.2"
+                  stroke-linecap="round"
+                />
+              </svg>
+              zdravo@gardenglow.rs
+            </li>
+          </ul>
+        </div>
+
+        <!-- ── Quick Links Column ── -->
+        <div data-reveal data-delay="1">
+          <h3 class="footer__col-title">Brzi linkovi</h3>
+          <ul class="footer__nav-list">
+            <li><a href="#hero">Početna</a></li>
+            <li><a href="#about">O nama</a></li>
+            <li><a href="#services">Naše usluge</a></li>
+            <li><a href="#gallery">Portfolio</a></li>
+            <li><a href="#testimonials">Preporuke</a></li>
+            <li><a href="#contact">Kontakt</a></li>
+          </ul>
+        </div>
+
+        <!-- ── Services Column ── -->
+        <div data-reveal data-delay="2">
+          <h3 class="footer__col-title">Naše usluge</h3>
+          <ul class="footer__nav-list">
+            <li><a href="#">Dizajn vrta</a></li>
+            <li><a href="#">Nega travnjaka</a></li>
+            <li><a href="#">Žive ograde i topijarne</a></li>
+            <li><a href="#">Sistemi za navodnjavanje</a></li>
+            <li><a href="#">Arboristika</a></li>
+            <li><a href="#">Sezonska sadnja</a></li>
+          </ul>
+        </div>
+
+        <!-- ── Social Column ── -->
+        <div data-reveal data-delay="3">
+          <h3 class="footer__col-title">Pratite nas</h3>
+
+          <div class="footer__social-grid">
+            <!-- Instagram -->
+            <a
+              class="footer__social-link"
+              href="#"
+              aria-label="Instagram"
+              title="Instagram"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <rect
+                  x="2"
+                  y="2"
+                  width="20"
+                  height="20"
+                  rx="5.5"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                />
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="4.5"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                />
+                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" />
+              </svg>
+            </a>
+
+            <!-- Facebook -->
+            <a
+              class="footer__social-link"
+              href="#"
+              aria-label="Facebook"
+              title="Facebook"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M18 2H15C13.6739 2 12.4021 2.52678 11.4645 3.46447C10.5268 4.40215 10 5.67392 10 7V10H7V14H10V22H14V14H17L18 10H14V7C14 6.73478 14.1054 6.48043 14.2929 6.29289C14.4804 6.10536 14.7348 6 15 6H18V2Z"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+
+            <!-- LinkedIn -->
+            <a
+              class="footer__social-link"
+              href="#"
+              aria-label="LinkedIn"
+              title="LinkedIn"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M16 8C17.5913 8 19.1174 8.63214 20.2426 9.75736C21.3679 10.8826 22 12.4087 22 14V21H18V14C18 13.4696 17.7893 12.9609 17.4142 12.5858C17.0391 12.2107 16.5304 12 16 12C15.4696 12 14.9609 12.2107 14.5858 12.5858C14.2107 12.9609 14 13.4696 14 14V21H10V14C10 12.4087 10.6321 10.8826 11.7574 9.75736C12.8826 8.63214 14.4087 8 16 8Z"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M6 9H2V21H6V9Z"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <circle
+                  cx="4"
+                  cy="4"
+                  r="2"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                />
+              </svg>
+            </a>
+
+            <!-- Pinterest -->
+            <a
+              class="footer__social-link"
+              href="#"
+              aria-label="Pinterest"
+              title="Pinterest"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M12 2C6.477 2 2 6.477 2 12C2 16.236 4.636 19.855 8.356 21.369C8.272 20.619 8.196 19.458 8.392 18.641C8.569 17.903 9.527 13.928 9.527 13.928C9.527 13.928 9.239 13.356 9.239 12.499C9.239 11.139 10.016 10.126 10.989 10.126C11.813 10.126 12.211 10.742 12.211 11.48C12.211 12.304 11.692 13.524 11.425 14.651C11.203 15.594 11.896 16.363 12.825 16.363C14.515 16.363 15.826 14.57 15.826 12.009C15.826 9.741 14.21 8.172 11.887 8.172C9.2 8.172 7.63 10.179 7.63 12.252C7.63 13.075 7.946 13.957 8.344 14.438C8.421 14.528 8.432 14.607 8.41 14.699C8.333 15.021 8.16 15.702 8.128 15.837C8.085 16.016 7.982 16.056 7.797 15.975C6.57 15.402 5.779 13.685 5.779 12.215C5.779 9.208 7.946 6.447 12.132 6.447C15.531 6.447 18.172 8.866 18.172 11.96C18.172 15.19 16.106 17.785 13.249 17.785C12.29 17.785 11.388 17.283 11.082 16.698L10.442 19.065C10.204 19.98 9.574 21.133 9.153 21.845C10.076 22.121 11.022 22.266 12 22.266C17.523 22.266 22 17.789 22 12.266C22 6.743 17.523 2.266 12 2.266L12 2Z"
+                  fill="currentColor"
+                  opacity=".85"
+                />
+              </svg>
+            </a>
+
+            <!-- YouTube -->
+            <a
+              class="footer__social-link"
+              href="#"
+              aria-label="YouTube"
+              title="YouTube"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.54C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <polygon
+                  points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"
+                  stroke="currentColor"
+                  stroke-width="1.4"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+
+            <!-- TikTok -->
+            <a
+              class="footer__social-link"
+              href="#"
+              aria-label="TikTok"
+              title="TikTok"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M19 3H16V13.5C16 15.16 14.66 16.5 13 16.5C11.34 16.5 10 15.16 10 13.5C10 11.84 11.34 10.5 13 10.5V7.5C9.69 7.5 7 10.19 7 13.5C7 16.81 9.69 19.5 13 19.5C16.31 19.5 19 16.81 19 13.5V8.27C19.96 9.05 21.18 9.5 22.5 9.5V6.5C20.57 6.5 19 5.07 19 3Z"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+          </div>
+
+          <p class="footer__social-names">@gardenglow.rs</p>
+        </div>
+      </div>
+      <!-- /footer__body -->
+
+      <!-- Copyright bar -->
+      <div class="footer__copy">
+        <div class="footer__copy-inner">
+          <p class="footer__copy-text">
+            &copy; 2025 <span>GardenGlow</span>. Sva prava zadržana. Izrađeno
+            s ljubavlju u Beogradu.
+          </p>
+          <ul class="footer__legal-links">
+            <li><a href="#">Politika privatnosti</a></li>
+            <li><a href="#">Uslovi korišćenja</a></li>
+            <li><a href="#">Podešavanja kolačića</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════
+       JAVASCRIPT
+  ═══════════════════════════════════════ -->
+    <script>
+      /* ── Navbar scroll behaviour ── */
+      const nav = document.getElementById("nav");
+      window.addEventListener(
+        "scroll",
+        () => {
+          nav.classList.toggle("is-scrolled", window.scrollY > 45);
+        },
+        { passive: true },
+      );
+
+      /* ── Mobile drawer ── */
+      (function () {
+        const burger = document.getElementById("burger");
+        const drawer = document.getElementById("nav-drawer");
+
+        function openDrawer() {
+          drawer.classList.add("is-open");
+          burger.classList.add("is-open");
+          burger.setAttribute("aria-label", "Zatvori meni");
+          burger.setAttribute("aria-expanded", "true");
+          document.body.style.overflow = "hidden";
+        }
+
+        function closeDrawer() {
+          drawer.classList.remove("is-open");
+          burger.classList.remove("is-open");
+          burger.setAttribute("aria-label", "Otvori meni");
+          burger.setAttribute("aria-expanded", "false");
+          document.body.style.overflow = "";
+        }
+
+        burger.addEventListener("click", () => {
+          drawer.classList.contains("is-open") ? closeDrawer() : openDrawer();
+        });
+
+        /* Close when any drawer link is clicked */
+        drawer.querySelectorAll("a").forEach((link) => {
+          link.addEventListener("click", closeDrawer);
+        });
+
+        /* Close on Escape key */
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && drawer.classList.contains("is-open"))
+            closeDrawer();
+        });
+      })();
+
+      /* ── Floating leaf particles ── */
+      const container = document.getElementById("particles");
+      const shapes = [
+        // Symmetric oval leaf
+        "M10 1 C6 3 3 7 3 11 C3 15 6 19 10 19 C14 19 17 15 17 11 C17 7 14 3 10 1Z",
+        // Pointed asymmetric leaf
+        "M10 1 C5 4 2 10 4 15 C6 18 10 20 10 20 C10 20 14 17 16 14 C18 10 15 4 10 1Z",
+        // Teardrop
+        "M10 2 C7 5 4 9 5 14 C6 17 8 19 10 19 C12 19 14 17 15 14 C16 9 13 5 10 2Z",
+      ];
+
+      for (let i = 0; i < 15; i++) {
+        const el = document.createElement("div");
+        el.className = "leaf";
+        const size = 7 + Math.random() * 13;
+        const path = shapes[Math.floor(Math.random() * shapes.length)];
+        const hue = 98 + Math.random() * 28;
+        const lght = 22 + Math.random() * 18;
+
+        Object.assign(el.style, {
+          left: `${Math.random() * 100}%`,
+          "--dur": `${11 + Math.random() * 14}s`,
+          "--delay": `${Math.random() * 14}s`,
+          color: `hsla(${hue}, 48%, ${lght}%, .44)`,
+        });
+
+        el.innerHTML = `<svg width="${size}" height="${size}" viewBox="0 0 20 20"><path d="${path}" fill="currentColor"/></svg>`;
+        container.appendChild(el);
+      }
+
+      /* ── Testimonial carousel ── */
+      (function () {
+        const slides = document.querySelectorAll(".testi__slide");
+        const dots = document.querySelectorAll(".testi__dot");
+        let current = 0;
+        let timer;
+
+        function goTo(idx) {
+          slides[current].classList.remove("is-active");
+          dots[current].classList.remove("is-active");
+          dots[current].setAttribute("aria-selected", "false");
+          current = (idx + slides.length) % slides.length;
+          slides[current].classList.add("is-active");
+          dots[current].classList.add("is-active");
+          dots[current].setAttribute("aria-selected", "true");
+          resetTimer();
+        }
+
+        function resetTimer() {
+          clearInterval(timer);
+          timer = setInterval(() => goTo(current + 1), 6000);
+        }
+
+        document
+          .getElementById("testi-prev")
+          .addEventListener("click", () => goTo(current - 1));
+        document
+          .getElementById("testi-next")
+          .addEventListener("click", () => goTo(current + 1));
+        dots.forEach((d) =>
+          d.addEventListener("click", () => goTo(+d.dataset.idx)),
+        );
+
+        resetTimer();
+      })();
+
+      /* ── Gallery category filter ── */
+      const filterBtns = document.querySelectorAll(".gal-btn");
+      const galItems = document.querySelectorAll(".gal-item");
+      const galCount = document.querySelector(
+        ".gallery__count strong:first-child",
+      );
+
+      filterBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          filterBtns.forEach((b) => b.classList.remove("is-active"));
+          btn.classList.add("is-active");
+
+          const filter = btn.dataset.filter;
+          let visible = 0;
+
+          galItems.forEach((item) => {
+            const match = filter === "all" || item.dataset.cat === filter;
+            item.classList.toggle("is-hidden", !match);
+            if (match) visible++;
+          });
+
+          if (galCount) galCount.textContent = visible;
+        });
+      });
+
+      /* ── Scroll reveal (IntersectionObserver) ── */
+      const revealEls = document.querySelectorAll("[data-reveal]");
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              io.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.14, rootMargin: "0px 0px -40px 0px" },
+      );
+
+      revealEls.forEach((el) => io.observe(el));
+    </script>
+  </body>
+</html>
