@@ -25,8 +25,8 @@
       }
 
       :root {
-        --clr-forest: #090f09;
-        --clr-deep: #0d1a0d;
+        --clr-forest: #132113;
+        --clr-deep: #225422;
         --clr-mid: #173317;
         --clr-accent: #2c5a2c;
         --clr-vivid: #5c9e35;
@@ -51,6 +51,119 @@
         overflow-x: hidden;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* ─────────────────────────────────────────
+       LOADER INTRO
+    ───────────────────────────────────────── */
+      #loader {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #080e08;
+        background-image:
+          radial-gradient(
+            ellipse 55% 55% at 50% 46%,
+            rgba(44, 90, 44, 0.3) 0%,
+            transparent 65%
+          ),
+          radial-gradient(
+            ellipse 35% 45% at 18% 88%,
+            rgba(23, 51, 23, 0.38) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse 38% 38% at 82% 12%,
+            rgba(44, 90, 44, 0.14) 0%,
+            transparent 55%
+          );
+        will-change: transform;
+      }
+
+      .loader__grain {
+        position: absolute;
+        inset: -50%;
+        width: 200%;
+        height: 200%;
+        pointer-events: none;
+        opacity: 0.032;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size: 180px 180px;
+        animation: grain 10s steps(8) infinite;
+      }
+
+      .loader__inner {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .loader__logo-img {
+        width: 130px;
+        height: 130px;
+        object-fit: contain;
+        opacity: 0;
+        transform: scale(0.88);
+        animation: loader-logo-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.3s;
+        filter: drop-shadow(0 0 32px rgba(44, 90, 44, 0.55));
+      }
+
+      @keyframes loader-logo-in {
+        to { opacity: 1; transform: scale(1); }
+      }
+
+      /* Gold separator line */
+      .loader__line-wrap {
+        width: 86px;
+        height: 1px;
+        background: rgba(200, 164, 106, 0.15);
+        overflow: hidden;
+        opacity: 0;
+        animation: loader-linewrap-in 0.01s forwards 1.5s;
+      }
+
+      @keyframes loader-linewrap-in {
+        to { opacity: 1; }
+      }
+
+      .loader__line {
+        height: 100%;
+        background: var(--clr-gold);
+        transform-origin: left center;
+        transform: scaleX(0);
+        animation: loader-line-fill 0.75s cubic-bezier(0.4, 0, 0.2, 1) forwards 1.5s;
+      }
+
+      @keyframes loader-line-fill {
+        to { transform: scaleX(1); }
+      }
+
+      /* Inner content exit */
+      .loader__inner.is-exiting {
+        animation: loader-inner-out 0.45s ease forwards;
+      }
+
+      @keyframes loader-inner-out {
+        to { opacity: 0; transform: translateY(-10px); }
+      }
+
+      /* Curtain slides up */
+      #loader.is-exiting {
+        animation: loader-curtain-up 0.95s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+      }
+
+      @keyframes loader-curtain-up {
+        to { transform: translateY(-100%); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #loader { display: none; }
       }
 
       /* ─────────────────────────────────────────
@@ -1094,7 +1207,7 @@
       .features {
         position: relative;
         z-index: 10;
-        background: var(--clr-deep);
+     background: #152615;
         border-top: 1px solid var(--clr-deep);
         overflow: hidden;
       }
@@ -3398,71 +3511,43 @@
       .wave-divider svg {
         display: block;
         width: 100%;
-        height: 80px;
+        height: 120px;
       }
       @media (max-width: 768px) {
         .wave-divider svg {
-          height: 48px;
+          height: 64px;
         }
       }
     </style>
   </head>
   <body>
     <!-- ═══════════════════════════════════════
+       LOADING INTRO
+  ═══════════════════════════════════════ -->
+    <div id="loader" aria-hidden="true" role="status" aria-label="Učitavanje">
+      <div class="loader__grain"></div>
+      <div class="loader__inner" id="loader-inner">
+        <img
+          src="logo.png"
+          class="loader__logo-img"
+          alt="AD Zelena Linija"
+          draggable="false"
+        />
+        <div class="loader__line-wrap"><div class="loader__line"></div></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════
        NAVIGATION
   ═══════════════════════════════════════ -->
     <nav class="nav" id="nav" role="navigation" aria-label="Primary navigation">
-      <a href="#" class="nav__logo" aria-label="GardenGlow — Home">
-        <!-- Botanical leaf mark -->
-        <svg
-          class="nav__logo-mark"
-          viewBox="0 0 36 36"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          <path
-            d="M18 4C11 4 6 10 6 17c0 4.5 2.2 8.5 5.5 11"
-            stroke="#c8a46a"
-            stroke-width="1.45"
-            stroke-linecap="round"
-          />
-          <path
-            d="M18 4C25 4 30 10 30 17c0 4.5-2.2 8.5-5.5 11"
-            stroke="#c8a46a"
-            stroke-width="1.45"
-            stroke-linecap="round"
-          />
-          <line
-            x1="18"
-            y1="32"
-            x2="18"
-            y2="15"
-            stroke="#2c5a2c"
-            stroke-width="1.45"
-            stroke-linecap="round"
-          />
-          <line
-            x1="18"
-            y1="19"
-            x2="11"
-            y2="12"
-            stroke="#2c5a2c"
-            stroke-width="1.45"
-            stroke-linecap="round"
-          />
-          <line
-            x1="18"
-            y1="23"
-            x2="25"
-            y2="16"
-            stroke="#2c5a2c"
-            stroke-width="1.45"
-            stroke-linecap="round"
-          />
-          <circle cx="18" cy="15.5" r="2.4" fill="#c8a46a" />
-        </svg>
-        <span class="nav__wordmark">Garden<strong>Glow</strong></span>
+      <img
+        src="logo.png"
+        width="85"
+        height="55"
+        class="nav__wordmark"
+        alt="AD Zelena Linija"
+        draggable="false">
       </a>
 
       <ul class="nav__links" role="list">
@@ -3798,15 +3883,15 @@
 
           <div class="hero__stats" role="list">
             <div class="stat" role="listitem">
-              <span class="stat__num">15+</span>
-              <span class="stat__lbl">Godina iskustva</span>
+              <span class="stat__num">10+</span>
+              <span class="stat__lbl">Vrsta profesoionalnog alata</span>
             </div>
             <div class="stat" role="listitem">
-              <span class="stat__num">840</span>
+              <span class="stat__num">100</span>
               <span class="stat__lbl">Završenih projekata</span>
             </div>
             <div class="stat" role="listitem">
-              <span class="stat__num">98%</span>
+              <span class="stat__num">100%</span>
               <span class="stat__lbl">Zadovoljstvo klijenata</span>
             </div>
           </div>
@@ -3897,13 +3982,30 @@
       </div>
       <div class="wave-divider" aria-hidden="true">
         <svg
-          viewBox="0 0 1440 80"
+          viewBox="0 0 1440 120"
           preserveAspectRatio="none"
           xmlns="http://www.w3.org/2000/svg"
         >
+          <!-- Main organic fill — deep asymmetric roll -->
           <path
-            d="M0,80 C360,47 720,38 1080,47 C1260,58 1380,70 1440,80 L1440,80 L0,80 Z"
+            d="M0,120 C180,90 340,112 560,65 C730,28 920,76 1100,86 C1240,93 1360,110 1440,120 L1440,120 L0,120 Z"
             fill="#152615"
+          />
+          <!-- Decorative gold stroke — upper curve -->
+          <path
+            d="M-10,58 C180,28 380,58 600,12 C780,-22 980,18 1180,36 C1320,46 1400,54 1450,58"
+            fill="none"
+            stroke="rgba(200,164,106,0.22)"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+          <!-- Subtle green mid-stroke -->
+          <path
+            d="M0,82 C200,58 440,80 680,44 C860,16 1060,40 1300,62 C1380,70 1430,78 1440,82"
+            fill="none"
+            stroke="rgba(92,158,53,0.14)"
+            stroke-width="1"
+            stroke-linecap="round"
           />
         </svg>
       </div>
@@ -4245,92 +4347,36 @@
           Veruju nam <strong>25.000+ svetski poznatih brendova</strong><br />
           i organizacija svih veličina
         </p>
-
-        <div class="trust__logos" data-reveal data-delay="1">
-          <div class="trust__logo" title="Accufirm">
-            <span class="tl tl--sans"
-              >Accu<span style="color: var(--clr-gold-lt)">firm</span></span
-            >
-          </div>
-
-          <div class="trust__divider" aria-hidden="true"></div>
-
-          <div class="trust__logo" title="Bloomly">
-            <span class="tl tl--italic">Bloomly</span>
-          </div>
-
-          <div class="trust__divider" aria-hidden="true"></div>
-
-          <div class="trust__logo" title="Brighto">
-            <span class="tl tl--sans tl--dot">BRIGHTO</span>
-          </div>
-
-          <div class="trust__divider" aria-hidden="true"></div>
-
-          <div class="trust__logo" title="Digancy">
-            <span class="tl"
-              >Di<em style="font-style: italic; color: var(--clr-gold)"
-                >gancy</em
-              ></span
-            >
-          </div>
-
-          <div class="trust__divider" aria-hidden="true"></div>
-
-          <div class="trust__logo" title="EcoScape">
-            <!-- Small leaf icon + text -->
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 13 13"
-              fill="none"
-              style="opacity: 0.8"
-            >
-              <path
-                d="M6.5 1 C4 3 2 6 3 9 C4 11 6.5 12 6.5 12 C6.5 12 9 11 10 9 C11 6 9 3 6.5 1Z"
-                fill="#5c9e35"
-              />
-            </svg>
-            <span class="tl tl--sans" style="letter-spacing: 0.08em"
-              >EcoScape</span
-            >
-          </div>
-
-          <div class="trust__divider" aria-hidden="true"></div>
-
-          <div class="trust__logo" title="Fennious">
-            <span class="tl" style="font-weight: 300; letter-spacing: 0.08em"
-              >Fennious</span
-            >
-          </div>
-
-          <div class="trust__divider" aria-hidden="true"></div>
-
-          <div class="trust__logo" title="Lineco">
-            <span class="tl tl--sans tl--dot">LINECO</span>
-          </div>
-
-          <div class="trust__divider" aria-hidden="true"></div>
-
-          <div class="trust__logo" title="keyGenie">
-            <span class="tl tl--italic"
-              >key<strong style="font-style: normal; font-weight: 600"
-                >Genie</strong
-              ></span
-            >
-          </div>
-        </div>
+</div>
+       
         <!-- /trust__logos -->
       </div>
       <div class="wave-divider" aria-hidden="true">
         <svg
-          viewBox="0 0 1440 80"
+          viewBox="0 0 1440 120"
           preserveAspectRatio="none"
           xmlns="http://www.w3.org/2000/svg"
         >
+          <!-- Main fill — soft inverse arch rising from edges -->
           <path
-            d="M0,0 C480,45 960,45 1440,0 L1440,80 L0,80 Z"
+            d="M0,0 C240,55 480,88 720,52 C960,18 1200,60 1440,0 L1440,120 L0,120 Z"
             fill="#f3ede3"
+          />
+          <!-- Decorative dark-green stroke — follows the arch -->
+          <path
+            d="M0,18 C240,72 480,104 720,68 C960,36 1200,78 1440,18"
+            fill="none"
+            stroke="rgba(23,51,23,0.18)"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+          <!-- Faint secondary stroke -->
+          <path
+            d="M0,4 C200,46 520,80 720,46 C920,12 1240,50 1440,4"
+            fill="none"
+            stroke="rgba(23,51,23,0.08)"
+            stroke-width="1"
+            stroke-linecap="round"
           />
         </svg>
       </div>
@@ -4589,13 +4635,30 @@
       <!-- /services__inner -->
       <div class="wave-divider" aria-hidden="true">
         <svg
-          viewBox="0 0 1440 80"
+          viewBox="0 0 1440 120"
           preserveAspectRatio="none"
           xmlns="http://www.w3.org/2000/svg"
         >
+          <!-- Main fill — triple-valley organic flow -->
           <path
-            d="M0,80 C360,45 720,38 1080,48 C1260,55 1380,68 1440,80 L1440,80 L0,80 Z"
+            d="M0,120 C100,72 240,110 440,58 C580,18 720,74 880,50 C1000,30 1180,72 1340,94 C1400,107 1430,116 1440,120 L1440,120 L0,120 Z"
             fill="#090f09"
+          />
+          <!-- Gold accent — mirrors the valley rhythm -->
+          <path
+            d="M0,96 C100,48 240,86 440,34 C580,-6 720,50 880,26 C1000,6 1180,48 1340,70 C1400,82 1430,92 1440,96"
+            fill="none"
+            stroke="rgba(200,164,106,0.22)"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+          <!-- Subtle secondary curve -->
+          <path
+            d="M0,110 C150,74 300,102 520,64 C680,32 820,74 1000,54 C1120,40 1280,74 1440,110"
+            fill="none"
+            stroke="rgba(200,164,106,0.1)"
+            stroke-width="1"
+            stroke-linecap="round"
           />
         </svg>
       </div>
@@ -4836,13 +4899,30 @@
       <!-- /gallery__inner -->
       <div class="wave-divider" aria-hidden="true">
         <svg
-          viewBox="0 0 1440 80"
+          viewBox="0 0 1440 120"
           preserveAspectRatio="none"
           xmlns="http://www.w3.org/2000/svg"
         >
+          <!-- Main fill — graceful leaf-edge S-curve, sweeping left-low to right-high -->
           <path
-            d="M0,0 C360,35 720,45 1080,30 C1260,22 1380,10 1440,0 L1440,80 L0,80 Z"
+            d="M0,0 C280,44 560,74 840,54 C1060,38 1240,18 1440,0 L1440,120 L0,120 Z"
             fill="#173317"
+          />
+          <!-- Gold decorative sweep -->
+          <path
+            d="M0,16 C280,60 560,90 840,70 C1060,54 1240,34 1440,16"
+            fill="none"
+            stroke="rgba(200,164,106,0.22)"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+          <!-- Faint echo curve -->
+          <path
+            d="M0,5 C180,32 420,60 720,50 C960,40 1200,22 1440,5"
+            fill="none"
+            stroke="rgba(200,164,106,0.1)"
+            stroke-width="1"
+            stroke-linecap="round"
           />
         </svg>
       </div>
@@ -5180,36 +5260,13 @@
         <div class="footer__brand" data-reveal>
           <a href="#" class="footer__logo" aria-label="GardenGlow Početna">
             <!-- Logo mark: stylised leaf / G letterform -->
-            <svg
-              class="footer__logo-mark"
-              viewBox="0 0 42 42"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <circle cx="21" cy="21" r="20.5" stroke="rgba(200,164,106,.3)" />
-              <path
-                d="M21 8C21 8 10 14.5 10 23C10 28.523 14.477 33 21 33C27.523 33 32 28.523 32 23C32 17.477 27.523 12.954 21 8Z"
-                fill="rgba(44,90,44,.6)"
-              />
-              <path
-                d="M21 8C21 8 32 14.5 32 23"
-                stroke="#c8a46a"
-                stroke-width="1.2"
-                stroke-linecap="round"
-              />
-              <path
-                d="M21 15V33"
-                stroke="#c8a46a"
-                stroke-width="1"
-                stroke-linecap="round"
-                stroke-dasharray="2 2.5"
-              />
-            </svg>
-            <span class="footer__logo-text">
-              <span class="footer__logo-name">GardenGlow</span>
-              <span class="footer__logo-tagline">Uređenje i zelena nega</span>
-            </span>
+               <img
+        src="logo.png"
+        width="85"
+        height="55"
+        class="nav__wordmark"
+        alt="AD Zelena Linija"
+        draggable="false">
           </a>
 
           <p class="footer__desc">
@@ -5371,64 +5428,6 @@
               </svg>
             </a>
 
-            <!-- LinkedIn -->
-            <a
-              class="footer__social-link"
-              href="#"
-              aria-label="LinkedIn"
-              title="LinkedIn"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <path
-                  d="M16 8C17.5913 8 19.1174 8.63214 20.2426 9.75736C21.3679 10.8826 22 12.4087 22 14V21H18V14C18 13.4696 17.7893 12.9609 17.4142 12.5858C17.0391 12.2107 16.5304 12 16 12C15.4696 12 14.9609 12.2107 14.5858 12.5858C14.2107 12.9609 14 13.4696 14 14V21H10V14C10 12.4087 10.6321 10.8826 11.7574 9.75736C12.8826 8.63214 14.4087 8 16 8Z"
-                  stroke="currentColor"
-                  stroke-width="1.6"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M6 9H2V21H6V9Z"
-                  stroke="currentColor"
-                  stroke-width="1.6"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <circle
-                  cx="4"
-                  cy="4"
-                  r="2"
-                  stroke="currentColor"
-                  stroke-width="1.6"
-                />
-              </svg>
-            </a>
-
-            <!-- Pinterest -->
-            <a
-              class="footer__social-link"
-              href="#"
-              aria-label="Pinterest"
-              title="Pinterest"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <path
-                  d="M12 2C6.477 2 2 6.477 2 12C2 16.236 4.636 19.855 8.356 21.369C8.272 20.619 8.196 19.458 8.392 18.641C8.569 17.903 9.527 13.928 9.527 13.928C9.527 13.928 9.239 13.356 9.239 12.499C9.239 11.139 10.016 10.126 10.989 10.126C11.813 10.126 12.211 10.742 12.211 11.48C12.211 12.304 11.692 13.524 11.425 14.651C11.203 15.594 11.896 16.363 12.825 16.363C14.515 16.363 15.826 14.57 15.826 12.009C15.826 9.741 14.21 8.172 11.887 8.172C9.2 8.172 7.63 10.179 7.63 12.252C7.63 13.075 7.946 13.957 8.344 14.438C8.421 14.528 8.432 14.607 8.41 14.699C8.333 15.021 8.16 15.702 8.128 15.837C8.085 16.016 7.982 16.056 7.797 15.975C6.57 15.402 5.779 13.685 5.779 12.215C5.779 9.208 7.946 6.447 12.132 6.447C15.531 6.447 18.172 8.866 18.172 11.96C18.172 15.19 16.106 17.785 13.249 17.785C12.29 17.785 11.388 17.283 11.082 16.698L10.442 19.065C10.204 19.98 9.574 21.133 9.153 21.845C10.076 22.121 11.022 22.266 12 22.266C17.523 22.266 22 17.789 22 12.266C22 6.743 17.523 2.266 12 2.266L12 2Z"
-                  fill="currentColor"
-                  opacity=".85"
-                />
-              </svg>
-            </a>
-
             <!-- YouTube -->
             <a
               class="footer__social-link"
@@ -5507,6 +5506,28 @@
        JAVASCRIPT
   ═══════════════════════════════════════ -->
     <script>
+      /* ── Loader intro ── */
+      (function () {
+        document.body.style.overflow = "hidden";
+        var loader = document.getElementById("loader");
+        var inner  = document.getElementById("loader-inner");
+
+        setTimeout(function () {
+          inner.classList.add("is-exiting");
+          setTimeout(function () {
+            loader.classList.add("is-exiting");
+            loader.addEventListener(
+              "animationend",
+              function () {
+                loader.style.display = "none";
+                document.body.style.overflow = "";
+              },
+              { once: true }
+            );
+          }, 280);
+        }, 2500);
+      })();
+
       /* ── Navbar scroll behaviour ── */
       const nav = document.getElementById("nav");
       window.addEventListener(
