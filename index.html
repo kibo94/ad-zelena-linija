@@ -252,7 +252,7 @@
 
       .nav.is-scrolled {
         height: 66px;
-        background: rgba(34, 139, 34, 0.96);
+        background: var(--clr-white);
         backdrop-filter: blur(22px) saturate(1.5);
         -webkit-backdrop-filter: blur(22px) saturate(1.5);
         border-bottom-color: rgba(255, 255, 255, 0.13);
@@ -2191,35 +2191,13 @@
       .gallery__grid {
         display: grid;
         grid-template-columns: 1.55fr 1fr 1fr;
-        grid-template-rows: 295px 275px 310px;
+        grid-auto-rows: 285px;
         gap: 5px;
       }
 
-      /* Explicit placements */
-      .gal-item:nth-child(1) {
-        grid-column: 1;
-        grid-row: 1 / 3;
-      } /* tall left */
-      .gal-item:nth-child(2) {
-        grid-column: 2;
-        grid-row: 1;
-      }
-      .gal-item:nth-child(3) {
-        grid-column: 3;
-        grid-row: 1;
-      }
-      .gal-item:nth-child(4) {
-        grid-column: 2;
-        grid-row: 2;
-      }
-      .gal-item:nth-child(5) {
-        grid-column: 3;
-        grid-row: 2;
-      }
-      .gal-item:nth-child(6) {
-        grid-column: 1 / 4;
-        grid-row: 3;
-      } /* full-width strip */
+      /* Class-based placement — works correctly after filter show/hide */
+      .gal-item--tall { grid-row: span 2; }
+      .gal-item--wide { grid-column: 1 / -1; }
 
       /* ── Photo item ── */
       .gal-item {
@@ -2326,24 +2304,23 @@
         flex-shrink: 0;
       }
 
-      /* First item (tall) — larger title */
-      .gal-item:nth-child(1) .gal-item__info {
+      /* Tall item — larger info panel */
+      .gal-item--tall .gal-item__info {
         padding: 36px 32px;
       }
-      .gal-item:nth-child(1) .gal-item__title {
+      .gal-item--tall .gal-item__title {
         font-size: 28px;
       }
 
-      /* Last item (full-width) — side-by-side layout */
-      .gal-item:nth-child(6) .gal-item__info {
+      /* Wide item — side-by-side layout */
+      .gal-item--wide .gal-item__info {
         padding: 32px 40px;
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
         gap: 24px;
       }
-
-      .gal-item:nth-child(6) .gal-item__title {
+      .gal-item--wide .gal-item__title {
         font-size: 26px;
         margin-bottom: 0;
       }
@@ -3011,7 +2988,7 @@
         font-family: "Jost", sans-serif;
         font-size: 0.92rem;
         line-height: 1.75;
-        color: rgba(255, 255, 255, 0.52);
+        color: rgba(255, 255, 255, 0.8);
         margin-bottom: 32px;
         max-width: 310px;
       }
@@ -3031,7 +3008,7 @@
         gap: 12px;
         font-family: "Jost", sans-serif;
         font-size: 0.88rem;
-        color: rgba(255, 255, 255, 0.55);
+        color: rgba(255, 255, 255, 0.8);
         line-height: 1.5;
       }
 
@@ -3050,7 +3027,7 @@
         font-weight: 700;
         letter-spacing: 0.1em;
         text-transform: uppercase;
-        color: var(--clr-gold-lt);
+        color: rgba(255, 255, 255, 0.8);
         margin-bottom: 28px;
         display: flex;
         align-items: center;
@@ -3177,7 +3154,7 @@
         font-size: 0.8rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.28);
+        color: rgba(255, 255, 255, 0.8);
         line-height: 2.1;
       }
 
@@ -3202,7 +3179,7 @@
       .footer__copy-text {
         font-family: "Jost", sans-serif;
         font-size: 0.8rem;
-        color: #ffffff;
+        color: rgba(255, 255, 255, 0.8);
         letter-spacing: 0.04em;
       }
 
@@ -3223,7 +3200,7 @@
       .footer__legal-links a {
         font-family: "Jost", sans-serif;
         font-size: 0.78rem;
-        color: #ffffff;
+        color: rgba(255, 255, 255, 0.8);
         text-decoration: none;
         letter-spacing: 0.06em;
         transition: color 0.25s;
@@ -3283,7 +3260,7 @@
 
       /* ── Nav: white frosted glass when scrolled on light page ── */
       .nav.is-scrolled {
-        background: rgba(247, 245, 239, 0.96);
+
         backdrop-filter: blur(22px) saturate(1.4);
         -webkit-backdrop-filter: blur(22px) saturate(1.4);
         border-bottom-color: rgba(34, 139, 34, 0.1);
@@ -3468,33 +3445,11 @@
         }
         .gallery__grid {
           grid-template-columns: 1fr 1fr;
-          grid-template-rows: 260px 220px 220px 280px;
+          grid-auto-rows: 240px;
         }
-        .gal-item:nth-child(1) {
-          grid-column: 1 / 3;
-          grid-row: 1;
-        }
-        .gal-item:nth-child(2) {
-          grid-column: 1;
-          grid-row: 2;
-        }
-        .gal-item:nth-child(3) {
-          grid-column: 2;
-          grid-row: 2;
-        }
-        .gal-item:nth-child(4) {
-          grid-column: 1;
-          grid-row: 3;
-        }
-        .gal-item:nth-child(5) {
-          grid-column: 2;
-          grid-row: 3;
-        }
-        .gal-item:nth-child(6) {
-          grid-column: 1 / 3;
-          grid-row: 4;
-        }
-        .gal-item:nth-child(6) .gal-item__info {
+        .gal-item--tall { grid-row: span 2; }
+        .gal-item--wide { grid-column: 1 / -1; }
+        .gal-item--wide .gal-item__info {
           flex-direction: column;
           align-items: flex-start;
         }
@@ -3518,29 +3473,10 @@
         }
         .gallery__grid {
           grid-template-columns: 1fr;
-          grid-template-rows: repeat(6, 240px);
+          grid-auto-rows: 240px;
         }
-        .gal-item:nth-child(n) {
-          grid-column: 1;
-        }
-        .gal-item:nth-child(1) {
-          grid-row: 1;
-        }
-        .gal-item:nth-child(2) {
-          grid-row: 2;
-        }
-        .gal-item:nth-child(3) {
-          grid-row: 3;
-        }
-        .gal-item:nth-child(4) {
-          grid-row: 4;
-        }
-        .gal-item:nth-child(5) {
-          grid-row: 5;
-        }
-        .gal-item:nth-child(6) {
-          grid-row: 6;
-        }
+        .gal-item--tall { grid-row: span 1; }
+        .gal-item--wide { grid-column: 1; }
       }
 
       /* ===== HERO — WHITE / LIGHT BACKGROUND ===== */
@@ -4774,190 +4710,162 @@
             aria-label="Filtriraj projekte po kategoriji"
           >
             <button class="gal-btn is-active" data-filter="all">Svi</button>
-            <button class="gal-btn" data-filter="residential">Stambeni</button>
-            <button class="gal-btn" data-filter="commercial">
-              Komercijalni
-            </button>
-            <button class="gal-btn" data-filter="water">Voda i terase</button>
+            <button class="gal-btn" data-filter="zelene">Održavanje zelenih površina</button>
+            <button class="gal-btn" data-filter="odzaci">Mašinsko čišćenje odžaka</button>
           </div>
         </div>
         <!-- /gallery__hd -->
 
         <!-- Photo grid -->
         <div class="gallery__grid" data-reveal data-delay="1">
-          <!-- 1 — Tall left feature -->
-          <div class="gal-item" data-cat="residential">
-            <!--
-            Replace src with a real project photo.
-            This slot is the HERO of the gallery — use your best shot.
-            Ideal: ~800×900px, portrait landscape scene.
-          -->
-            <img
-              src="https://picsum.photos/seed/patio1/800/900"
-              alt="Mašinsko čišćenje odžaka u stambenim zgradama Kragujevac"
-              loading="lazy"
-            />
+
+          <!-- ── ZELENE POVRŠINE (1–6) ── -->
+
+          <!-- Z1 — tall left, featured -->
+          <div class="gal-item gal-item--tall" data-cat="zelene">
+            <img src="https://picsum.photos/seed/lawnMow/800/900" alt="Košenje travnjaka — AD Zelena linija Kragujevac" loading="lazy" />
             <div class="gal-item__veil" aria-hidden="true"></div>
             <div class="gal-item__info">
-              <div class="gal-item__cat">Stambeno imanje</div>
-              <div class="gal-item__title">
-                Terasa pored jezera i<br />vatromna instalacija
-              </div>
-              <a href="#" class="gal-item__view">
-                Pogledaj projekat
-                <svg viewBox="0 0 11 11" fill="none" aria-hidden="true">
-                  <path
-                    d="M1 5.5h9M6 1.5l4 4-4 4"
-                    stroke="currentColor"
-                    stroke-width="1.4"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </a>
+              <div class="gal-item__cat">Zelene površine</div>
+              <div class="gal-item__title">Profesionalno<br />košenje travnjaka</div>
+              <a href="#" class="gal-item__view">Pogledaj projekat <svg viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M1 5.5h9M6 1.5l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
             </div>
           </div>
 
-          <!-- 2 — Top centre -->
-          <div class="gal-item" data-cat="residential">
-            <img
-              src="https://picsum.photos/seed/japanGarden/600/500"
-              alt="Čišćenje dimnjaka Kragujevac — profesionalna usluga dimničara"
-              loading="lazy"
-            />
+          <!-- Z2 -->
+          <div class="gal-item" data-cat="zelene">
+            <img src="https://picsum.photos/seed/hedgeTrim/600/500" alt="Uređenje živih ograda — Kragujevac" loading="lazy" />
             <div class="gal-item__veil" aria-hidden="true"></div>
             <div class="gal-item__info">
-              <div class="gal-item__cat">Stambeni</div>
-              <div class="gal-item__title">Japanski nasleđeni vrt</div>
-              <a href="#" class="gal-item__view">
-                Pogledaj projekat
-                <svg viewBox="0 0 11 11" fill="none" aria-hidden="true">
-                  <path
-                    d="M1 5.5h9M6 1.5l4 4-4 4"
-                    stroke="currentColor"
-                    stroke-width="1.4"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </a>
+              <div class="gal-item__cat">Zelene površine</div>
+              <div class="gal-item__title">Oblikovanje živih ograda</div>
+              <a href="#" class="gal-item__view">Pogledaj projekat <svg viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M1 5.5h9M6 1.5l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
             </div>
           </div>
 
-          <!-- 3 — Top right -->
-          <div class="gal-item" data-cat="water">
-            <img
-              src="https://picsum.photos/seed/pondBridge/600/500"
-              alt="Čišćenje kamina i kotlova — odžačar Šumadijski okrug"
-              loading="lazy"
-            />
+          <!-- Z3 -->
+          <div class="gal-item" data-cat="zelene">
+            <img src="https://picsum.photos/seed/gardenFlowers/600/500" alt="Sezonska sadnja cveća — AD Zelena linija" loading="lazy" />
             <div class="gal-item__veil" aria-hidden="true"></div>
             <div class="gal-item__info">
-              <div class="gal-item__cat">Vodena instalacija</div>
-              <div class="gal-item__title">Ukrasni ribnjak i most</div>
-              <a href="#" class="gal-item__view">
-                Pogledaj projekat
-                <svg viewBox="0 0 11 11" fill="none" aria-hidden="true">
-                  <path
-                    d="M1 5.5h9M6 1.5l4 4-4 4"
-                    stroke="currentColor"
-                    stroke-width="1.4"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </a>
+              <div class="gal-item__cat">Zelene površine</div>
+              <div class="gal-item__title">Sezonska sadnja cveća</div>
+              <a href="#" class="gal-item__view">Pogledaj projekat <svg viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M1 5.5h9M6 1.5l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
             </div>
           </div>
 
-          <!-- 4 — Middle centre -->
-          <div class="gal-item" data-cat="residential">
-            <img
-              src="https://picsum.photos/seed/flowerGarden/600/500"
-              alt="Mašinsko čišćenje dimnjaka Kragujevac — brzo i sigurno"
-              loading="lazy"
-            />
+          <!-- Z4 -->
+          <div class="gal-item" data-cat="zelene">
+            <img src="https://picsum.photos/seed/treePruning/600/500" alt="Obrezivanje stabala — arboristika Kragujevac" loading="lazy" />
             <div class="gal-item__veil" aria-hidden="true"></div>
             <div class="gal-item__info">
-              <div class="gal-item__cat">Stambeni</div>
-              <div class="gal-item__title">Seoski cvjetni dizajn</div>
-              <a href="#" class="gal-item__view">
-                Pogledaj projekat
-                <svg viewBox="0 0 11 11" fill="none" aria-hidden="true">
-                  <path
-                    d="M1 5.5h9M6 1.5l4 4-4 4"
-                    stroke="currentColor"
-                    stroke-width="1.4"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </a>
+              <div class="gal-item__cat">Zelene površine</div>
+              <div class="gal-item__title">Obrezivanje i nega stabala</div>
+              <a href="#" class="gal-item__view">Pogledaj projekat <svg viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M1 5.5h9M6 1.5l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
             </div>
           </div>
 
-          <!-- 5 — Middle right -->
-          <div class="gal-item" data-cat="water">
-            <img
-              src="https://picsum.photos/seed/modernPool/600/500"
-              alt="Čišćenje roštilja i kotlova — dimničar Kragujevac"
-              loading="lazy"
-            />
+          <!-- Z5 -->
+          <div class="gal-item" data-cat="zelene">
+            <img src="https://picsum.photos/seed/gardenPath/600/500" alt="Uređenje staza i puteva — Šumadijski okrug" loading="lazy" />
             <div class="gal-item__veil" aria-hidden="true"></div>
             <div class="gal-item__info">
-              <div class="gal-item__cat">Voda i terase</div>
-              <div class="gal-item__title">Moderni odražavajući bazen</div>
-              <a href="#" class="gal-item__view">
-                Pogledaj projekat
-                <svg viewBox="0 0 11 11" fill="none" aria-hidden="true">
-                  <path
-                    d="M1 5.5h9M6 1.5l4 4-4 4"
-                    stroke="currentColor"
-                    stroke-width="1.4"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </a>
+              <div class="gal-item__cat">Zelene površine</div>
+              <div class="gal-item__title">Uređenje staza i puteva</div>
+              <a href="#" class="gal-item__view">Pogledaj projekat <svg viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M1 5.5h9M6 1.5l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
             </div>
           </div>
 
-          <!-- 6 — Full-width bottom strip -->
-          <div class="gal-item" data-cat="commercial">
-            <img
-              src="https://picsum.photos/seed/nightGarden/1400/620"
-              alt="Odžačar Kragujevac — mašinsko čišćenje odžaka i dimnjaka u stambenim zgradama Šumadijskog okruga"
-              loading="lazy"
-            />
+          <!-- Z6 — wide strip -->
+          <div class="gal-item gal-item--wide" data-cat="zelene">
+            <img src="https://picsum.photos/seed/parkMaintenance/1400/580" alt="Uređenje parkova i javnih zelenih površina Kragujevac" loading="lazy" />
             <div class="gal-item__veil" aria-hidden="true"></div>
             <div class="gal-item__info">
               <div>
-                <div class="gal-item__cat">Komercijalno imanje</div>
-                <div class="gal-item__title">
-                  Večernja rasveta i krajobrazni dizajn
-                </div>
+                <div class="gal-item__cat">Zelene površine</div>
+                <div class="gal-item__title">Uređenje parkova i javnih zelenih površina</div>
               </div>
-              <a href="#" class="gal-item__view">
-                Pogledaj projekat
-                <svg viewBox="0 0 11 11" fill="none" aria-hidden="true">
-                  <path
-                    d="M1 5.5h9M6 1.5l4 4-4 4"
-                    stroke="currentColor"
-                    stroke-width="1.4"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </a>
+              <a href="#" class="gal-item__view">Pogledaj projekat <svg viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M1 5.5h9M6 1.5l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
             </div>
           </div>
+
+          <!-- ── MAŠINSKO ČIŠĆENJE ODŽAKA (7–12) ── -->
+
+          <!-- O7 -->
+          <div class="gal-item" data-cat="odzaci">
+            <img src="https://picsum.photos/seed/chimneyClean/600/500" alt="Mašinsko čišćenje dimnjaka Kragujevac" loading="lazy" />
+            <div class="gal-item__veil" aria-hidden="true"></div>
+            <div class="gal-item__info">
+              <div class="gal-item__cat">Čišćenje odžaka</div>
+              <div class="gal-item__title">Mašinsko čišćenje dimnjaka</div>
+              <a href="#" class="gal-item__view">Pogledaj projekat <svg viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M1 5.5h9M6 1.5l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            </div>
+          </div>
+
+          <!-- O8 -->
+          <div class="gal-item" data-cat="odzaci">
+            <img src="https://picsum.photos/seed/boilerService/600/500" alt="Servis i čišćenje kotlova — dimničar Kragujevac" loading="lazy" />
+            <div class="gal-item__veil" aria-hidden="true"></div>
+            <div class="gal-item__info">
+              <div class="gal-item__cat">Čišćenje odžaka</div>
+              <div class="gal-item__title">Servis i čišćenje kotlova</div>
+              <a href="#" class="gal-item__view">Pogledaj projekat <svg viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M1 5.5h9M6 1.5l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            </div>
+          </div>
+
+          <!-- O9 — tall right -->
+          <div class="gal-item gal-item--tall" data-cat="odzaci">
+            <img src="https://picsum.photos/seed/fireplaceClean/800/900" alt="Čišćenje kamina — odžačar Šumadijski okrug" loading="lazy" />
+            <div class="gal-item__veil" aria-hidden="true"></div>
+            <div class="gal-item__info">
+              <div class="gal-item__cat">Čišćenje odžaka</div>
+              <div class="gal-item__title">Čišćenje i restauracija<br />kamina</div>
+              <a href="#" class="gal-item__view">Pogledaj projekat <svg viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M1 5.5h9M6 1.5l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            </div>
+          </div>
+
+          <!-- O10 -->
+          <div class="gal-item" data-cat="odzaci">
+            <img src="https://picsum.photos/seed/chimneyInspect/600/500" alt="Inspekcija i snimanje odžaka — Kragujevac" loading="lazy" />
+            <div class="gal-item__veil" aria-hidden="true"></div>
+            <div class="gal-item__info">
+              <div class="gal-item__cat">Čišćenje odžaka</div>
+              <div class="gal-item__title">Inspekcija i snimanje odžaka</div>
+              <a href="#" class="gal-item__view">Pogledaj projekat <svg viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M1 5.5h9M6 1.5l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            </div>
+          </div>
+
+          <!-- O11 -->
+          <div class="gal-item" data-cat="odzaci">
+            <img src="https://picsum.photos/seed/grillClean/600/500" alt="Čišćenje roštilja — AD Zelena linija Kragujevac" loading="lazy" />
+            <div class="gal-item__veil" aria-hidden="true"></div>
+            <div class="gal-item__info">
+              <div class="gal-item__cat">Čišćenje odžaka</div>
+              <div class="gal-item__title">Čišćenje roštilja i peći</div>
+              <a href="#" class="gal-item__view">Pogledaj projekat <svg viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M1 5.5h9M6 1.5l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            </div>
+          </div>
+
+          <!-- O12 — wide strip -->
+          <div class="gal-item gal-item--wide" data-cat="odzaci">
+            <img src="https://picsum.photos/seed/buildingChimney/1400/580" alt="Mašinsko čišćenje odžaka u stambenim zgradama — Šumadijski okrug" loading="lazy" />
+            <div class="gal-item__veil" aria-hidden="true"></div>
+            <div class="gal-item__info">
+              <div>
+                <div class="gal-item__cat">Čišćenje odžaka</div>
+                <div class="gal-item__title">Čišćenje odžaka u stambenim zgradama Šumadijskog okruga</div>
+              </div>
+              <a href="#" class="gal-item__view">Pogledaj projekat <svg viewBox="0 0 11 11" fill="none" aria-hidden="true"><path d="M1 5.5h9M6 1.5l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            </div>
+          </div>
+
         </div>
         <!-- /gallery__grid -->
 
         <!-- Footer row -->
         <div class="gallery__footer" data-reveal data-delay="2">
           <p class="gallery__count">
-            Prikazuje se <strong>6</strong> od <strong>48</strong> završenih
+            Prikazuje se <strong>12</strong> od <strong>12</strong> završenih
             projekata
           </p>
           <a href="#" class="btn btn--outline" style="padding: 14px 36px">
@@ -5608,7 +5516,7 @@
 
           galItems.forEach((item) => {
             const match = filter === "all" || item.dataset.cat === filter;
-            item.classList.toggle("is-hidden", !match);
+            item.style.display = match ? "" : "none";
             if (match) visible++;
           });
 
